@@ -15,6 +15,9 @@ class TrackersViewController: UIViewController {
         addToScreen()
     }
     
+    var categories: [TrackerCategory] = []
+    var completedTrackers: [TrackerRecord] = []
+    
     private var trackerList: [String] = []
     private var addButton = UIButton()
     private var starImage = UIImageView()
