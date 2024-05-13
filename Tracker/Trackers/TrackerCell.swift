@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 protocol TrackerCellDelegate: AnyObject {
-    func didTapExecButton(cell: TrackerCell, with tracker: Tracker)
+    func didTapDoneButton(cell: TrackerCell, with tracker: Tracker)
 }
 
 final class TrackerCell: UICollectionViewCell {
@@ -88,13 +88,21 @@ final class TrackerCell: UICollectionViewCell {
         execButton.setImage(UIImage(systemName: "plus"), for: .normal)
         execButton.tintColor = .white_color
         execButton.layer.cornerRadius = 17
-        execButton.addTarget(self, action: #selector(didTapExecButton), for: .touchUpInside)
+        execButton.addTarget(self, action: #selector(didTapDoneButton), for: .touchUpInside)
         NSLayoutConstraint.activate([
             execButton.centerYAnchor.constraint(equalTo: daysLabel.centerYAnchor),
             execButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
             execButton.widthAnchor.constraint(equalToConstant: 34),
             execButton.heightAnchor.constraint(equalToConstant: 34)
         ])
+    }
+    
+    func addToScreen() {
+        configureCardView()
+        configureDaysLabel()
+        configureEmojiView()
+        configureEmojiLabel()
+        configureEexecButton()
     }
     
     weak var delegate: TrackerCellDelegate?
@@ -159,20 +167,10 @@ final class TrackerCell: UICollectionViewCell {
         }
         return result
     }
+    
+    @objc func didTapDoneButton() {
+        guard let tracker else { return }
+        delegate?.didTapDoneButton(cell: self, with: tracker)
+    }
 }
 
-private extension TrackerCell {
-    
-    @objc func didTapExecButton() {
-        guard let tracker else { return }
-        delegate?.didTapExecButton(cell: self, with: tracker)
-    }
-    
-    func addToScreen() {
-        configureCardView()
-        configureDaysLabel()
-        configureEmojiView()
-        configureEmojiLabel()
-        configureEexecButton()
-    }
-}

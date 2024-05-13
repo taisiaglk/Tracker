@@ -1,5 +1,5 @@
 //
-//  rackerTypeViewController.swift
+//  TrackerTypeViewController.swift
 //  Tracker
 //
 //  Created by Тася Галкина on 12.05.2024.
@@ -59,29 +59,25 @@ final class TrackerTypeViewController: UIViewController {
         ])
     }
     
-    weak var delegate: TrackerTypeViewControllerDelegate?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        title = "Создание трекера"
-        view.backgroundColor = .white_color
-        
-        addToSCreen()
-    }
-    
     private func addToSCreen() {
         configureButtonStack()
         configureHabitButton()
         configureEventButton()
     }
     
+    weak var delegate: TrackerTypeViewControllerDelegate?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Создание трекера"
+        view.backgroundColor = .white_color
+        addToSCreen()
+    }
     
     enum TrackerVersion {
         case habit, event
     }
-}
-
-private extension TrackerTypeViewController {
+    
     @objc func didTapHabitButton() {
         title = "Новая привычка"
         delegate?.didCreateTracker(with: .habit)
@@ -92,3 +88,5 @@ private extension TrackerTypeViewController {
         delegate?.didCreateTracker(with: .event)
     }
 }
+
+

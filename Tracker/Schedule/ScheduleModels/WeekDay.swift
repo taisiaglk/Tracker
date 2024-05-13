@@ -8,7 +8,7 @@
 import Foundation
 
 
-enum WeekDay: Int, Codable {
+enum WeekDay: Int, Codable, CaseIterable {
     case monday = 0
     case tuesday = 1
     case wednesday = 2
@@ -53,6 +53,5 @@ enum WeekDay: Int, Codable {
         case .sunday:
             return "Вс"
         }
-   
     }
 }

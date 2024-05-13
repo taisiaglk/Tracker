@@ -4,10 +4,6 @@
 //
 //  Created by Тася Галкина on 11.05.2024.
 
-
-//Создан Tracker — сущность для хранения информации про трекер (для «Привычки» или «Нерегулярного события»). У него есть уникальный идентификатор (id), название, цвет, эмоджи и распиcание. Структуру данных для хранения расписания выберите на своё усмотрение.
-//
-
 import Foundation
 import UIKit
 
@@ -16,5 +12,20 @@ struct Tracker {
     let name: String
     let color: UIColor
     let emoji: String
-//    let schedule: []
+    let schedule: [WeekDay]?
+    
+    init(id: UUID = UUID(), name: String, color: UIColor, emoji: String, schedule: [WeekDay]?) {
+        self.id = id
+        self.name = name
+        self.color = color
+        self.emoji = emoji
+        self.schedule = schedule
+    }
+    
+    struct Track {
+        var name: String = ""
+        var color: UIColor? = nil
+        var emoji: String? = nil
+        var schedule: [WeekDay]? = nil
+    }
 }
