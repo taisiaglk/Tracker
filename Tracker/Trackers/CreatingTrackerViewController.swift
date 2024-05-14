@@ -49,9 +49,10 @@ final class CreatingTrackerViewController: UIViewController {
     ]
     private let trackerColors: [UIColor] = [.gray_color, .purple.withAlphaComponent(0.5), .red.withAlphaComponent(0.5), .blue.withAlphaComponent(0.5)]
     
-    init(version: TrackerTypeViewController.TrackerVersion, data: Tracker.Track = Tracker.Track()) {
+    init(version: TrackerTypeViewController.TrackerVersion, data: Tracker.Track = Tracker.Track(), descr: TrackerCategory.TrackCategory = TrackerCategory.TrackCategory()) {
         self.version = version
         self.data = data
+        self.descr = descr
         super.init(nibName: nil, bundle: nil)
         
         switch version {
@@ -163,6 +164,12 @@ final class CreatingTrackerViewController: UIViewController {
         }
     }
     
+    private var descr: TrackerCategory.TrackCategory {
+        didSet {
+            checkButtonValidation()
+        }
+    }
+    
     private var buttonIsEnable = false {
         willSet {
             if newValue {
@@ -184,10 +191,9 @@ final class CreatingTrackerViewController: UIViewController {
         return short.joined(separator: ", ")
     }
     
-    private var category: String? = "База" {
-        didSet {
-            checkButtonValidation()
-        }
+    private var category: String? {
+        guard let category = descr.title else { return nil }
+        return category
     }
     
     private func setTitle() {
@@ -213,7 +219,7 @@ final class CreatingTrackerViewController: UIViewController {
     }
     
     @objc private func didTapCreateButton() {
-        guard let category = category,
+        guard let category = descr.title,
               let emoji = data.emoji,
               let color = data.color else { return }
         let createNewTracker = Tracker(name: data.name, color: color, emoji: emoji, schedule: data.schedule)
@@ -278,16 +284,24 @@ extension CreatingTrackerViewController: UITableViewDataSource {
 extension CreatingTrackerViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard isHabit else { return }
-        if indexPath.row != 0 {
-            guard let schedule = data.schedule else { return }
-            let scheduleViewController = ScheduleViewController(markedWeekdays: schedule)
-            scheduleViewController.delegate = self
-            let navigationController = UINavigationController(rootViewController: scheduleViewController)
-            present(navigationController, animated: true)
+        if isHabit {
+            if indexPath.row != 0 {
+                guard let schedule = data.schedule else { return }
+                let scheduleViewController = ScheduleViewController(markedWeekdays: schedule)
+                scheduleViewController.delegate = self
+                let navigationController = UINavigationController(rootViewController: scheduleViewController)
+                present(navigationController, animated: true)
+            } else {
+                let categoryViewController = CategoryViewController()
+                categoryViewController.delegate = self
+                navigationController?.pushViewController(categoryViewController, animated: true)
+            }
         } else {
-            return
+            let categoryViewController = CategoryViewController()
+            categoryViewController.delegate = self
+            navigationController?.pushViewController(categoryViewController, animated: true)
         }
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -300,6 +314,13 @@ extension CreatingTrackerViewController: ScheduleViewControllerDelegate {
         data.schedule = activeDays
         optionsTable.reloadData()
         dismiss(animated: true)
+    }
+}
+
+extension CreatingTrackerViewController: CategoryViewControllerDelegate {
+    func didSelectCategory(category: TrackerCategory) {
+        descr.title = category.title
+        optionsTable.reloadData()
     }
 }
 

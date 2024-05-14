@@ -47,7 +47,6 @@ final class CreatingCell: UITableViewCell {
     }
     
     private func configureNameLabel() {
-//        contentView.addSubview(labelStack)
         labelStack.addArrangedSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.textColor = .black_color
