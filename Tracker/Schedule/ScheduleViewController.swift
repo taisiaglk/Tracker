@@ -48,6 +48,7 @@ final class ScheduleViewController: UIViewController {
         weekdaysTable.separatorStyle = .none
         weekdaysTable.isScrollEnabled = false
         weekdaysTable.register(ScheduleCell.self, forCellReuseIdentifier: ScheduleCell.identifier)
+        weekdaysTable.layer.cornerRadius = 15
         
         NSLayoutConstraint.activate([
             weekdaysTable.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
@@ -90,6 +91,13 @@ final class ScheduleViewController: UIViewController {
             weekdaysTable.bottomAnchor.constraint(equalTo: readyButton.topAnchor, constant: -16)
         ])
     }
+    
+    private func createSeparator() -> UIView {
+        let separator = UIView()
+        separator.backgroundColor = .gray_color
+        separator.translatesAutoresizingMaskIntoConstraints = false
+        return separator
+    }
 }
 
 extension ScheduleViewController: UITableViewDataSource {
@@ -106,16 +114,35 @@ extension ScheduleViewController: UITableViewDataSource {
         switch indexPath.row {
         case 0:
             position = .top
+            cell.layer.cornerRadius = 16
+            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         case 1...5:
             position = .middle
+            cell.layer.cornerRadius = 0
         case 6:
             position = .bottom
+            cell.layer.cornerRadius = 16
+            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         default:
             position = .common
         }
         
         cell.configure(day: weekday, active: markedWeekdays.contains(weekday), position: position)
         cell.delegate = self
+        cell.backgroundColor = .background_color
+        
+        if indexPath.row < WeekDay.allCases.count - 1 {
+            let separator = UIView()
+            separator.backgroundColor = .gray_color
+            separator.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(separator)
+            NSLayoutConstraint.activate([
+                separator.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
+                separator.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
+                separator.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
+                separator.heightAnchor.constraint(equalToConstant: 0.5)
+            ])
+        }
         return cell
     }
 }
@@ -135,4 +162,3 @@ extension ScheduleViewController: ScheduleCellDelegate {
         }
     }
 }
-

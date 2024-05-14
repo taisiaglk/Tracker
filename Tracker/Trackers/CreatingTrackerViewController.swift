@@ -63,10 +63,10 @@ final class CreatingTrackerViewController: UIViewController {
     }
     
     private func getCurrentWeekday() -> WeekDay {
-            let calendar = Calendar.current
-            let weekdayIndex = calendar.component(.weekday, from: Date())
-            return WeekDay(rawValue: weekdayIndex - 2) ?? .monday
-        }
+        let calendar = Calendar.current
+        let weekdayIndex = calendar.component(.weekday, from: Date())
+        return WeekDay(rawValue: weekdayIndex - 2) ?? .monday
+    }
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
@@ -84,6 +84,10 @@ final class CreatingTrackerViewController: UIViewController {
         nameTracker.placeholder = "Введите название трекера"
         nameTracker.addTarget(self, action: #selector(didChangeTextOnNameTracker), for: .editingChanged)
         
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: nameTracker.frame.height))
+        nameTracker.leftView = paddingView
+        nameTracker.leftViewMode = .always
+        
         NSLayoutConstraint.activate([
             nameTracker.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
             nameTracker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
@@ -91,6 +95,7 @@ final class CreatingTrackerViewController: UIViewController {
             nameTracker.heightAnchor.constraint(equalToConstant: 75)
         ])
     }
+    
     
     private func configureOptionsTable() {
         view.addSubview(optionsTable)
