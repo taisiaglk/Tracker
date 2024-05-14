@@ -46,7 +46,7 @@ final class CategoryViewController: UIViewController {
     
     private func configureEmptyScreenImage() {
         view.addSubview(emptyScreenImage)
-        emptyScreenImage.image = UIImage(named: "EmptyTrackerIcon")
+        emptyScreenImage.image = UIImage(named: "star")
         emptyScreenImage.contentMode = .scaleToFill
         emptyScreenImage.translatesAutoresizingMaskIntoConstraints = false
         emptyScreenImage.heightAnchor.constraint(equalToConstant: 80).isActive = true
@@ -56,7 +56,7 @@ final class CategoryViewController: UIViewController {
     private func configureLabel() {
         view.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Привычки и события можно объединить по смыслу"
+        label.text = "Привычки и события можно \nобъединить по смыслу"
         label.numberOfLines = 0
         label.textColor = .black_color
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
