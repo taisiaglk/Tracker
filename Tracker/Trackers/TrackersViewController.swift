@@ -47,7 +47,9 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
                 guard let schedule = tracker.schedule else { return true }
                 return schedule.contains(WeekDay.allCases[day > 1 ? day - 2 : day + 5])
             }
-            tracker.append(TrackerCategory(title: category.title, trackers: trackersFilter))
+            if !trackersFilter.isEmpty {
+                tracker.append(TrackerCategory(title: category.title, trackers: trackersFilter))
+            }
         }
         return tracker
     }
@@ -59,7 +61,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         trackersLabel.font = UIFont.boldSystemFont(ofSize: 34)
         trackersLabel.textColor = .black
         NSLayoutConstraint.activate([
-            trackersLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,constant: 44),
+            trackersLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 44),
             trackersLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
         ])
     }
@@ -155,9 +157,20 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         configureSearchField()
         configureDatePicker()
         configureCollectionView()
+        configureStarImage()
+        configureLabel()
+        updateVisibility()
+    }
+    
+    private func updateVisibility() {
         if currentlyTrackers.isEmpty {
-            configureStarImage()
-            configureLabel()
+            starImage.isHidden = false
+            label.isHidden = false
+            collectionView.isHidden = true
+        } else {
+            starImage.isHidden = true
+            label.isHidden = true
+            collectionView.isHidden = false
         }
     }
     
@@ -172,6 +185,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         currentDate = sender.date
         isEnableToAdd = currentDate <= Date()
         collectionView.reloadData()
+        updateVisibility()
     }
     
     private func hideKeyboard() {
@@ -189,13 +203,17 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     
     func didTapCreateButton(category: String, tracker: Tracker) {
         dismiss(animated: true)
-        let categoryIndex = 0
-        let newCardForCategory = TrackerCategory(
-            title: category,
-            trackers: categories[categoryIndex].trackers + [tracker]
-        )
-        categories[categoryIndex] = newCardForCategory
+        if let categoryIndex = categories.firstIndex(where: { $0.title == category }) {
+            var updatedTrackers = categories[categoryIndex].trackers
+            updatedTrackers.append(tracker)
+            let updatedCategory = TrackerCategory(title: category, trackers: updatedTrackers)
+            
+            categories[categoryIndex] = updatedCategory
+        } else {
+            categories.append(TrackerCategory(title: category, trackers: [tracker]))
+        }
         collectionView.reloadData()
+        updateVisibility()
     }
     
     func didCreateTracker(with version: TrackerTypeViewController.TrackerVersion) {
@@ -210,7 +228,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
 
 extension TrackersViewController: TrackerCellDelegate {
     func didTapDoneButton(cell: TrackerCell, with tracker: Tracker) {
-        if isEnableToAdd == true {
+        if isEnableToAdd {
             let recordingTracker = TrackerRecord(id: tracker.id, date: currentDate)
             if let index = completedTrackers.firstIndex(where: { $0.date == currentDate && $0.id == tracker.id }) {
                 completedTrackers.remove(at: index)
@@ -226,6 +244,7 @@ extension TrackersViewController: TrackerCellDelegate {
             alert.addAction(UIAlertAction(title: "окей", style: .default, handler: nil))
             present(alert, animated: true, completion: nil)
         }
+        updateVisibility()
     }
 }
 
@@ -272,7 +291,7 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         guard
             kind == UICollectionView.elementKindSectionHeader,
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as? TrackerHeaderSectionView else { return UICollectionReusableView() }
-        let label =  currentlyTrackers[indexPath.section].title
+        let label = currentlyTrackers[indexPath.section].title
         view.putText(label)
         return view
     }
