@@ -101,6 +101,7 @@ final class TrackerCell: UICollectionViewCell {
         configureCardView()
         configureDaysLabel()
         configureEmojiView()
+        configureTrackerLabel()
         configureEmojiLabel()
         configureEexecButton()
     }

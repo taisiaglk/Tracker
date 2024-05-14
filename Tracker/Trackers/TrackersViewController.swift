@@ -201,6 +201,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     func didCreateTracker(with version: TrackerTypeViewController.TrackerVersion) {
         dismiss(animated: true)
         let createTracker = CreatingTrackerViewController(version: version)
+        
         createTracker.delegate = self
         let navigationController = UINavigationController(rootViewController: createTracker)
         present(navigationController, animated: true)
@@ -222,7 +223,7 @@ extension TrackersViewController: TrackerCellDelegate {
             }
         } else {
             let alert = UIAlertController(title: "\u{1F974}", message: "еще рано!", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Понятно", style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: "окей", style: .default, handler: nil))
             present(alert, animated: true, completion: nil)
         }
     }

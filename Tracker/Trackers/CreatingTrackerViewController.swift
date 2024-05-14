@@ -20,6 +20,8 @@ final class CreatingTrackerViewController: UIViewController {
     let cancelButton = UIButton()
     let createButton = UIButton()
     let buttonStack = UIStackView()
+    var isHabit = Bool()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +30,7 @@ final class CreatingTrackerViewController: UIViewController {
         optionsTable.dataSource = self
         optionsTable.delegate = self
         setTitle()
+        setIsHabit()
         configureNameTracker()
         configureOptionsTable()
         configureButtonStack()
@@ -55,9 +58,15 @@ final class CreatingTrackerViewController: UIViewController {
         case .habit:
             self.data.schedule = []
         case .event:
-            self.data.schedule = nil
+            self.data.schedule = [getCurrentWeekday()]
         }
     }
+    
+    private func getCurrentWeekday() -> WeekDay {
+            let calendar = Calendar.current
+            let weekdayIndex = calendar.component(.weekday, from: Date())
+            return WeekDay(rawValue: weekdayIndex - 2) ?? .monday
+        }
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
@@ -185,6 +194,15 @@ final class CreatingTrackerViewController: UIViewController {
         }
     }
     
+    private func setIsHabit() {
+        switch version {
+        case .habit:
+            isHabit = true
+        case .event:
+            isHabit = false
+        }
+    }
+    
     @objc private func didTapCancelButton() {
         delegate?.didTapCancelButton()
     }
@@ -227,7 +245,11 @@ final class CreatingTrackerViewController: UIViewController {
 extension CreatingTrackerViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        data.schedule == nil ? 1 : 2
+        if isHabit {
+            return 2
+        } else {
+            return 1
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -236,7 +258,7 @@ extension CreatingTrackerViewController: UITableViewDataSource {
         var description: String? = nil
         var position: CommonCellView.Position
         
-        if data.schedule == nil {
+        if !isHabit {
             description = category
             position = .common
         } else {
@@ -251,6 +273,7 @@ extension CreatingTrackerViewController: UITableViewDataSource {
 extension CreatingTrackerViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard isHabit else { return }
         if indexPath.row != 0 {
             guard let schedule = data.schedule else { return }
             let scheduleViewController = ScheduleViewController(markedWeekdays: schedule)
