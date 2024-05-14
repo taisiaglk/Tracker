@@ -24,7 +24,7 @@
 		0000C35D2BF27C5B007F8B8D /* TrackerHeaderSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000C35C2BF27C5B007F8B8D /* TrackerHeaderSectionView.swift */; };
 		0000C3C42BF3DFDA007F8B8D /* CategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000C3C32BF3DFDA007F8B8D /* CategoryCell.swift */; };
 		0000C3C62BF3E20B007F8B8D /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000C3C52BF3E20B007F8B8D /* CategoryViewController.swift */; };
-		0000C3C82BF3F0F4007F8B8D /* NewCategoryViweController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000C3C72BF3F0F4007F8B8D /* NewCategoryViweController.swift */; };
+		0000C3C82BF3F0F4007F8B8D /* NewCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000C3C72BF3F0F4007F8B8D /* NewCategoryViewController.swift */; };
 		00BB57BC2BEB8C3100059BB5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BB57BB2BEB8C3100059BB5 /* AppDelegate.swift */; };
 		00BB57BE2BEB8C3100059BB5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BB57BD2BEB8C3100059BB5 /* SceneDelegate.swift */; };
 		00BB57C02BEB8C3100059BB5 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BB57BF2BEB8C3100059BB5 /* TabBarController.swift */; };
@@ -50,7 +50,7 @@
 		0000C35C2BF27C5B007F8B8D /* TrackerHeaderSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerHeaderSectionView.swift; sourceTree = "<group>"; };
 		0000C3C32BF3DFDA007F8B8D /* CategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCell.swift; sourceTree = "<group>"; };
 		0000C3C52BF3E20B007F8B8D /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
-		0000C3C72BF3F0F4007F8B8D /* NewCategoryViweController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCategoryViweController.swift; sourceTree = "<group>"; };
+		0000C3C72BF3F0F4007F8B8D /* NewCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCategoryViewController.swift; sourceTree = "<group>"; };
 		00BB57B82BEB8C3100059BB5 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00BB57BB2BEB8C3100059BB5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		00BB57BD2BEB8C3100059BB5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -142,7 +142,7 @@
 			children = (
 				0000C3C52BF3E20B007F8B8D /* CategoryViewController.swift */,
 				0000C3C32BF3DFDA007F8B8D /* CategoryCell.swift */,
-				0000C3C72BF3F0F4007F8B8D /* NewCategoryViweController.swift */,
+				0000C3C72BF3F0F4007F8B8D /* NewCategoryViewController.swift */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -265,7 +265,7 @@
 				0000C34C2BF07799007F8B8D /* TrackerCell.swift in Sources */,
 				0000C3482BF0110B007F8B8D /* TrackerRecord.swift in Sources */,
 				0000C3502BF0BCF6007F8B8D /* CreatingTrackerViewController.swift in Sources */,
-				0000C3C82BF3F0F4007F8B8D /* NewCategoryViweController.swift in Sources */,
+				0000C3C82BF3F0F4007F8B8D /* NewCategoryViewController.swift in Sources */,
 				0000C31F2BEB96FF007F8B8D /* StatisticsViewController.swift in Sources */,
 				0000C35D2BF27C5B007F8B8D /* TrackerHeaderSectionView.swift in Sources */,
 				0000C31A2BEB95C8007F8B8D /* UIColor+Extensions.swift in Sources */,

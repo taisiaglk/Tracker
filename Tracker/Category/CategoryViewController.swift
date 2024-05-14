@@ -81,6 +81,7 @@ final class CategoryViewController: UIViewController {
         tableView.layer.cornerRadius = 16
         tableView.layer.masksToBounds = true
         tableView.tableHeaderView = UIView()
+        tableView.separatorStyle = .none
         tableView.register(CategoryCell.self, forCellReuseIdentifier: CategoryCell.identifier)
     }
     

@@ -1,5 +1,5 @@
 //
-//  NewCategoryViweController.swift
+//  NewCategoryViewController.swift
 //  Tracker
 //
 //  Created by Тася Галкина on 15.05.2024.
@@ -73,8 +73,6 @@ final class NewCategoryViewController: UIViewController {
         configureDoneButton()
         
         textField.delegate = self
-        //        doneButton.isEnabled = false
-        //        doneButton.backgroundColor = .gray_color
     }
     
     @objc private func pushDoneButton() {
