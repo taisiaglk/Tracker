@@ -24,8 +24,5 @@ final class TabBarController: UITabBarController {
         
         viewControllers = [trackersViewController, statisticsViewController]
     }
-    
-    
-    
 }
 

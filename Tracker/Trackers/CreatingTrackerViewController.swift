@@ -22,7 +22,6 @@ final class CreatingTrackerViewController: UIViewController {
     let buttonStack = UIStackView()
     var isHabit = Bool()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white_color
@@ -74,7 +73,6 @@ final class CreatingTrackerViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     private func configureNameTracker() {
         view.addSubview(nameTracker)
         nameTracker.translatesAutoresizingMaskIntoConstraints = false
@@ -96,7 +94,6 @@ final class CreatingTrackerViewController: UIViewController {
             nameTracker.heightAnchor.constraint(equalToConstant: 75)
         ])
     }
-    
     
     private func configureOptionsTable() {
         view.addSubview(optionsTable)
@@ -153,7 +150,6 @@ final class CreatingTrackerViewController: UIViewController {
             buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             buttonStack.heightAnchor.constraint(equalToConstant: 60)
         ])
-        
     }
     
     weak var delegate: CreatingTrackerViewControllerDelegate?
@@ -222,7 +218,7 @@ final class CreatingTrackerViewController: UIViewController {
         guard let category = descr.title,
               let emoji = data.emoji,
               let color = data.color else { return }
-        let createNewTracker = Tracker(name: data.name, color: color, emoji: emoji, schedule: data.schedule)
+        let createNewTracker = Tracker(id: UUID(), name: data.name, color: color, emoji: emoji, schedule: data.schedule)
         delegate?.didTapCreateButton(category: category, tracker: createNewTracker)
     }
     
@@ -301,7 +297,6 @@ extension CreatingTrackerViewController: UITableViewDelegate {
             categoryViewController.delegate = self
             navigationController?.pushViewController(categoryViewController, animated: true)
         }
-        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

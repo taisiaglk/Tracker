@@ -12,6 +12,10 @@ final class CommonCellView: UIView {
     
     let cellViewBoard = UIView()
     
+    enum Position {
+        case top, middle, bottom, common
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -44,10 +48,6 @@ final class CommonCellView: UIView {
         backgroundColor = .background_color
         
         configureCellViewBoard()
-    }
-    
-    enum Position {
-        case top, middle, bottom, common
     }
     
     func configure(position: Position) {
