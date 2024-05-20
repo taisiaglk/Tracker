@@ -15,7 +15,24 @@ extension UIColor {
     static var red_color: UIColor { UIColor(named: "red_color") ?? UIColor.red }
     static var blue_color: UIColor { UIColor(named: "blue_color") ?? UIColor.red }
     static var background_color: UIColor { UIColor(named: "background_color") ?? UIColor.gray.withAlphaComponent(0.5) }
-    
+    static var colorr1: UIColor { UIColor(named: "color1") ?? UIColor.red }
+    static var colorr2: UIColor { UIColor(named: "color2") ?? UIColor.orange }
+    static var colorr3: UIColor { UIColor(named: "color3") ?? UIColor.blue }
+    static var colorr4: UIColor { UIColor(named: "color4") ?? UIColor.purple }
+    static var colorr5: UIColor { UIColor(named: "color5") ?? UIColor.green }
+    static var colorr6: UIColor { UIColor(named: "color6") ?? UIColor.systemPink }
+    static var colorr7: UIColor { UIColor(named: "color7") ?? UIColor.systemPink }
+    static var colorr8: UIColor { UIColor(named: "color8") ?? UIColor.blue }
+    static var colorr9: UIColor { UIColor(named: "color9") ?? UIColor.green }
+    static var colorr10: UIColor { UIColor(named: "color10") ?? UIColor.purple }
+    static var colorr11: UIColor { UIColor(named: "color11") ?? UIColor.orange }
+    static var colorr12: UIColor { UIColor(named: "color12") ?? UIColor.systemPink }
+    static var colorr13: UIColor { UIColor(named: "color13") ?? UIColor.orange }
+    static var colorr14: UIColor { UIColor(named: "color14") ?? UIColor.blue }
+    static var colorr15: UIColor { UIColor(named: "color15") ?? UIColor.purple }
+    static var colorr16: UIColor { UIColor(named: "color16") ?? UIColor.purple }
+    static var colorr17: UIColor { UIColor(named: "color17") ?? UIColor.purple }
+    static var colorr18: UIColor { UIColor(named: "color18") ?? UIColor.green }
 
 }
 

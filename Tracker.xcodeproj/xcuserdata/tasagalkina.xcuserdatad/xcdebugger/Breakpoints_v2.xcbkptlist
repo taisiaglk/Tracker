@@ -14,8 +14,8 @@
             filePath = "Tracker/Trackers/CreatingTrackerViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
+            startingLineNumber = "151"
+            endingLineNumber = "151"
             landmarkName = "configureOptionsTable()"
             landmarkType = "7">
             <Locations>
@@ -77,8 +77,8 @@
             filePath = "Tracker/Trackers/CreatingTrackerViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "99"
-            endingLineNumber = "99"
+            startingLineNumber = "152"
+            endingLineNumber = "152"
             landmarkName = "configureOptionsTable()"
             landmarkType = "7">
             <Locations>
@@ -125,8 +125,8 @@
             filePath = "Tracker/Trackers/CreatingTrackerViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "262"
-            endingLineNumber = "262"
+            startingLineNumber = "332"
+            endingLineNumber = "332"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -141,8 +141,8 @@
             filePath = "Tracker/Trackers/CreatingTrackerViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "266"
-            endingLineNumber = "266"
+            startingLineNumber = "336"
+            endingLineNumber = "336"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
             <Locations>
@@ -189,8 +189,8 @@
             filePath = "Tracker/Trackers/CreatingTrackerViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
             landmarkName = "configureButtonStack()"
             landmarkType = "7">
             <Locations>
@@ -237,8 +237,8 @@
             filePath = "Tracker/Trackers/CreatingTrackerViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "268"
-            endingLineNumber = "268"
+            startingLineNumber = "338"
+            endingLineNumber = "338"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
             <Locations>
@@ -285,8 +285,8 @@
             filePath = "Tracker/Trackers/CreatingTrackerViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "282"
-            endingLineNumber = "282"
+            startingLineNumber = "352"
+            endingLineNumber = "352"
             landmarkName = "tableView(_:didSelectRowAt:)"
             landmarkType = "7">
             <Locations>
@@ -333,8 +333,8 @@
             filePath = "Tracker/Trackers/CreatingTrackerViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "225"
-            endingLineNumber = "225"
+            startingLineNumber = "295"
+            endingLineNumber = "295"
             landmarkName = "checkButtonValidation()"
             landmarkType = "7">
             <Locations>
@@ -381,8 +381,8 @@
             filePath = "Tracker/Trackers/CreatingTrackerViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
+            startingLineNumber = "292"
+            endingLineNumber = "292"
             landmarkName = "didTapCreateButton()"
             landmarkType = "7">
             <Locations>
@@ -444,8 +444,8 @@
             filePath = "Tracker/Trackers/CreatingTrackerViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "254"
-            endingLineNumber = "254"
+            startingLineNumber = "324"
+            endingLineNumber = "324"
             landmarkName = "tableView(_:numberOfRowsInSection:)"
             landmarkType = "7">
             <Locations>
@@ -492,8 +492,8 @@
             filePath = "Tracker/Trackers/CreatingTrackerViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "252"
-            endingLineNumber = "252"
+            startingLineNumber = "322"
+            endingLineNumber = "322"
             landmarkName = "CreatingTrackerViewController"
             landmarkType = "21">
          </BreakpointContent>
@@ -508,8 +508,8 @@
             filePath = "Tracker/Trackers/CreatingTrackerViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "255"
-            endingLineNumber = "255"
+            startingLineNumber = "325"
+            endingLineNumber = "325"
             landmarkName = "tableView(_:numberOfRowsInSection:)"
             landmarkType = "7">
          </BreakpointContent>
