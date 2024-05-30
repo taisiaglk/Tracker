@@ -15,6 +15,8 @@ protocol CreatingTrackerViewControllerDelegate: AnyObject {
 
 final class CreatingTrackerViewController: UIViewController {
     
+    private let trackerStore = TrackerStore.shared
+    
     let scrollView = UIScrollView()
     let contentView = UIView()
     let nameTracker = UITextField()
@@ -285,6 +287,7 @@ final class CreatingTrackerViewController: UIViewController {
     }
     
     @objc private func didTapCreateButton() {
+        
         guard let category = descr.title,
               let emoji = data.emoji,
               let color = data.color else { return }
@@ -306,15 +309,19 @@ final class CreatingTrackerViewController: UIViewController {
         buttonIsEnable = true
     }
     
-    private func takeRandomElement() {
-        data.emoji = emoji.randomElement()
-        data.color = trackerColors.randomElement()
-    }
     
+    
+//    private func takeRandomElement() {
+//        data.emoji = emoji.randomElement()
+//        data.color = trackerColors.randomElement()
+//    }
+//    
     @objc private func didChangeTextOnNameTracker(_ sender: UITextField) {
         guard let text = sender.text else { return }
         data.name = text
     }
+    
+    
 }
 
 
