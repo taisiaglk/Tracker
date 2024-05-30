@@ -84,7 +84,7 @@ final class TrackerStore: NSObject {
             throw TrackerStoreError.decodingErrorInvalidID
         }
         
-        let color = UIColor(hexString: colorString)
+        let color = UIColor.color(from: colorString)
         let schedule = WeekDay.calculateScheduleArray(from: trackerCoreData.schedule)
         
         return Tracker(
@@ -102,7 +102,7 @@ final class TrackerStore: NSObject {
         
         trackerCoreData.idTracker = tracker.id
         trackerCoreData.name = tracker.name
-        trackerCoreData.color = tracker.color.hexString
+        trackerCoreData.color = tracker.color.hexString()
         trackerCoreData.emoji = tracker.emoji
         trackerCoreData.schedule = WeekDay.calculateScheduleValue(for: tracker.schedule ?? [])
         trackerCoreData.category = trackerCategoryCoreData
