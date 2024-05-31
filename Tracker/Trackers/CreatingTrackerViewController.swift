@@ -309,22 +309,11 @@ final class CreatingTrackerViewController: UIViewController {
         buttonIsEnable = true
     }
     
-    
-    
-//    private func takeRandomElement() {
-//        data.emoji = emoji.randomElement()
-//        data.color = trackerColors.randomElement()
-//    }
-//    
     @objc private func didChangeTextOnNameTracker(_ sender: UITextField) {
         guard let text = sender.text else { return }
         data.name = text
     }
-    
-    
 }
-
-
 
 extension CreatingTrackerViewController: UITableViewDataSource {
     

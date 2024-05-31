@@ -206,7 +206,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     }
     
     @objc private func addButtonTapped() {
-        let createTrack = CreatingTrackerViewController(version: .habit)
+        let createTrack = TrackerTypeViewController()
         createTrack.delegate = self
         let navigationController = UINavigationController(rootViewController: createTrack)
         present(navigationController, animated: true)
@@ -234,16 +234,12 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     
     private func saveTracker(_ tracker: Tracker, toCategory category: String) {
         do {
-            // Пытаемся найти существующую категорию
             if let existingCategory = categories.first(where: { $0.title == category }) {
-                // Сохраняем трекер в существующую категорию
                 try trackerStore.addTracker(tracker, toCategory: existingCategory)
             } else {
-                // Создаем новую категорию и сохраняем трекер в нее
                 let newCategory = TrackerCategory(title: category, trackers: [tracker])
                 try trackerCategoryStore.addCategory(newCategory)
                 try trackerStore.addTracker(tracker, toCategory: newCategory)
-                categories.append(newCategory)
             }
         } catch {
             print("Ошибка сохранения трекера: \(error)")
@@ -255,7 +251,8 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         dismiss(animated: true)
         
         saveTracker(tracker, toCategory: category)
-    
+        
+        reloadData()
         collectionView.reloadData()
         updateVisibility()
     }

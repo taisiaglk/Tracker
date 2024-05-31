@@ -21,6 +21,12 @@ final class CategoryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        do {
+            trackerCategories = try trackerCategoryStore.getCategories()
+        } catch {
+            print("Get categories failed")
+        }
+        
         view.backgroundColor = .white_color
         
         navigationItem.hidesBackButton = true
@@ -38,11 +44,6 @@ final class CategoryViewController: UIViewController {
         
         trackerCategoryStore.setDelegate(self)
         
-        do {
-            trackerCategories = try trackerCategoryStore.getCategories()
-        } catch {
-            print("Get categories failed")
-        }
     }
     
     private var trackerCategories: [TrackerCategory] = []
