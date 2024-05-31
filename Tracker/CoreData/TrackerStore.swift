@@ -96,18 +96,27 @@ final class TrackerStore: NSObject {
         )
     }
     
-    private func addTracker(_ tracker: Tracker, to category: TrackerCategory) throws {
+    func addTracker(_ tracker: Tracker, to category: TrackerCategory) throws {
         let trackerCategoryCoreData = try trackerCategoryStore.fetchCategoryCoreData(for: category)
-        let trackerCoreData = TrackerCoreData(context: context)
-        
-        trackerCoreData.idTracker = tracker.id
-        trackerCoreData.name = tracker.name
-        trackerCoreData.color = tracker.color.hexString()
-        trackerCoreData.emoji = tracker.emoji
-        trackerCoreData.schedule = WeekDay.calculateScheduleValue(for: tracker.schedule ?? [])
-        trackerCoreData.category = trackerCategoryCoreData
-        
-        try saveContext()
+
+        // Check if tracker already exists
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "idTracker == %@", tracker.id as CVarArg)
+
+        let existingTrackers = try context.fetch(fetchRequest)
+        if existingTrackers.isEmpty {
+            let trackerCoreData = TrackerCoreData(context: context)
+            trackerCoreData.idTracker = tracker.id
+            trackerCoreData.name = tracker.name
+            trackerCoreData.color = tracker.color.hexString()
+            trackerCoreData.emoji = tracker.emoji
+            trackerCoreData.schedule = WeekDay.calculateScheduleValue(for: tracker.schedule ?? [])
+            trackerCoreData.category = trackerCategoryCoreData
+            
+            try saveContext()
+        } else {
+            print("Tracker with this ID already exists")
+        }
     }
     
     private func saveContext() throws {

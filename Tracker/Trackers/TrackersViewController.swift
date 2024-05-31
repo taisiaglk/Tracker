@@ -255,16 +255,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         dismiss(animated: true)
         
         saveTracker(tracker, toCategory: category)
-        
-        if let categoryIndex = categories.firstIndex(where: { $0.title == category }) {
-            var updatedTrackers = categories[categoryIndex].trackers
-            updatedTrackers.append(tracker)
-            let updatedCategory = TrackerCategory(title: category, trackers: updatedTrackers)
-            
-            categories[categoryIndex] = updatedCategory
-        } else {
-            categories.append(TrackerCategory(title: category, trackers: [tracker]))
-        }
+    
         collectionView.reloadData()
         updateVisibility()
     }
