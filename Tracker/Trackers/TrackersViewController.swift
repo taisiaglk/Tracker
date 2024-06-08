@@ -238,7 +238,6 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
                 try trackerStore.addTracker(tracker, toCategory: existingCategory)
             } else {
                 let newCategory = TrackerCategory(title: category, trackers: [tracker])
-                try trackerCategoryStore.addCategory(newCategory)
                 try trackerStore.addTracker(tracker, toCategory: newCategory)
             }
         } catch {
