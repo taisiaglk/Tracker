@@ -24,17 +24,10 @@ final class CategoryViewController: UIViewController {
     }
     
     var delegate: CategoryViewControllerDelegate?
-    //    private let trackerCategoryStore: TrackerCategoryStoreProtocol = TrackerCategoryStore.shared
     var viewModel: CategoryViewModel
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //        do {
-        //            trackerCategories = try trackerCategoryStore.getCategories()
-        //        } catch {
-        //            print("Get categories failed")
-        //        }
         
         view.backgroundColor = .white_color
         
@@ -113,7 +106,9 @@ final class CategoryViewController: UIViewController {
         tableView.layer.cornerRadius = 16
         tableView.layer.masksToBounds = true
         tableView.tableHeaderView = UIView()
-        tableView.separatorStyle = .none
+        //        tableView.separatorStyle = .none
+        tableView.separatorStyle = .singleLine
+        tableView.separatorColor = .gray
         tableView.register(CategoryCell.self, forCellReuseIdentifier: CategoryCell.identifier)
     }
     
@@ -176,7 +171,7 @@ extension CategoryViewController: UITableViewDataSource {
         
         
         cell.textLabel?.text = viewModel.getCategoryTitle(at: indexPath)
-        cell.backgroundColor = .gray_color.withAlphaComponent(0.3)
+        cell.backgroundColor = .background_color
         cell.separatorInset = UIEdgeInsets( top: 0, left: 16, bottom: 0, right: 16 )
         cell.layer.masksToBounds = true
         cell.layer.cornerRadius = 16.0
@@ -192,6 +187,17 @@ extension CategoryViewController: UITableViewDataSource {
             } else {
                 cell.layer.maskedCorners = []
             }
+        }
+        
+        if indexPath.row < viewModel.countCategories() - 1 {
+            let separator = createSeparator()
+            cell.contentView.addSubview(separator)
+            NSLayoutConstraint.activate([
+                separator.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
+                separator.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
+                separator.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
+                separator.heightAnchor.constraint(equalToConstant: 0.5)
+            ])
         }
         
         if indexPath.row == viewModel.selectedCategoryIndex {
@@ -212,13 +218,5 @@ extension CategoryViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         viewModel.selectCategory(at: indexPath)
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-        } else {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        }
     }
 }
