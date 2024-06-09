@@ -79,10 +79,7 @@ extension OnboardingViewController: UIPageViewControllerDataSource {
         guard let viewControllerIndex = pages.firstIndex(of: viewController) else {
             return nil
         }
-        let previousIndex = viewControllerIndex - 1
-        guard previousIndex >= 0 else {
-            return pages.last
-        }
+        let previousIndex = (viewControllerIndex + pages.count - 1) % pages.count
         return pages[previousIndex]
     }
     
@@ -91,10 +88,7 @@ extension OnboardingViewController: UIPageViewControllerDataSource {
         guard let viewControllerIndex = pages.firstIndex(of: viewController) else {
             return nil
         }
-        let nextIndex = viewControllerIndex + 1
-        guard nextIndex < pages.count else {
-            return pages.first
-        }
+        let nextIndex = (viewControllerIndex + 1) % pages.count
         return pages[nextIndex]
     }
 }
