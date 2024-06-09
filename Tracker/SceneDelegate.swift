@@ -17,14 +17,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: scene)
         if(onboardingOpportunity.isNeedShowOnboarding()) {
-            let onboardingViewController = OnboardingViewController()
-            onboardingViewController.onboardingCompletionHandler = { [weak self] in
+            let onboardingPageViewController = OnboardingPageViewController(pageImage: "Onboarding1", pageText: "Отслеживайте только\nто, что хотите")
+            onboardingPageViewController.onboardingCompletionHandler = { [weak self] in
                 self?.onboardingOpportunity.onboardingShowed()
                 
                 let tabBarController = TabBarController()
                 self?.window?.rootViewController = tabBarController
             }
-            window?.rootViewController = onboardingViewController
+            window?.rootViewController = OnboardingViewController()
             
         } else {
             let tabBarController = TabBarController()

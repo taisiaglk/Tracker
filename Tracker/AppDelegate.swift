@@ -15,12 +15,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow()
-        let onboardingViewController = OnboardingViewController()
-        onboardingViewController.onboardingCompletionHandler = { [weak self] in
+        let onboardingPageViewController = OnboardingPageViewController(pageImage: "Onboarding1", pageText: "Отслеживайте только\nто, что хотите")
+        onboardingPageViewController.onboardingCompletionHandler = { [weak self] in
             let tabBarController = TabBarController()
             self?.window?.rootViewController = tabBarController
         }
-        window?.rootViewController = onboardingViewController
+        
+        window?.rootViewController = OnboardingViewController()
         window?.makeKeyAndVisible()
         return true
     }

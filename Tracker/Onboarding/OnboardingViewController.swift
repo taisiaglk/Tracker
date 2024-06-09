@@ -26,8 +26,6 @@ final class OnboardingViewController: UIPageViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var onboardingCompletionHandler: (() -> Void)?
-    
     private lazy var pages: [OnboardingPageViewController] = [
         OnboardingPageViewController(pageImage: "Onboarding1", pageText: "Отслеживайте только\nто, что хотите"),
         OnboardingPageViewController(pageImage: "Onboarding2", pageText: "Даже если это\nне литры воды и йога")
@@ -37,8 +35,6 @@ final class OnboardingViewController: UIPageViewController {
         super.viewDidLoad()
         
         configurePageControl()
-        configureDoneButton()
-        configureConstraints()
         
         guard let firstViewController = pages.first else {
             return
@@ -50,7 +46,6 @@ final class OnboardingViewController: UIPageViewController {
     }
     
     let pageControl = UIPageControl()
-    let doneButton = UIButton()
     
     private func configurePageControl() {
         view.addSubview(pageControl)
@@ -60,33 +55,11 @@ final class OnboardingViewController: UIPageViewController {
         pageControl.currentPageIndicatorTintColor = .black_forAll
         pageControl.pageIndicatorTintColor = .black_forAll.withAlphaComponent(0.3)
         pageControl.addTarget(self, action: #selector(pageControlChanged), for: .valueChanged)
-    }
-    
-    private func configureDoneButton() {
-        view.addSubview(doneButton)
-        doneButton.translatesAutoresizingMaskIntoConstraints = false
-        doneButton.backgroundColor = .black_forAll
-        doneButton.layer.cornerRadius = 16
-        doneButton.layer.masksToBounds = true
-        doneButton.setTitle("Вот это технологии!", for: .normal)
-        doneButton.setTitleColor(.white, for: .normal)
-        doneButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
-    }
-    
-    private func configureConstraints() {
+        
         NSLayoutConstraint.activate([
             pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pageControl.bottomAnchor.constraint(equalTo: doneButton.topAnchor, constant: -24),
-            doneButton.heightAnchor.constraint(equalToConstant: 60),
-            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50)
+            pageControl.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -134)
         ])
-    }
-    
-    @objc private func doneButtonTapped() {
-        onboardingCompletionHandler?()
     }
     
     @objc private func pageControlChanged() {
