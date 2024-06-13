@@ -8,13 +8,9 @@
 import Foundation
 import UIKit
 
-protocol NewCategoryViewControllerDelegate: AnyObject {
-    func didCreateCategory(_ category: TrackerCategory)
-}
-
 final class NewCategoryViewController: UIViewController {
     
-    weak var delegate: NewCategoryViewControllerDelegate?
+    private let trackerCategoryStore: TrackerCategoryStoreProtocol = TrackerCategoryStore.shared
     
     let textField = UITextField()
     let doneButton = UIButton()
@@ -78,7 +74,11 @@ final class NewCategoryViewController: UIViewController {
     @objc private func pushDoneButton() {
         if let text = textField.text, !text.isEmpty {
             let category = TrackerCategory(title: text, trackers: [])
-            delegate?.didCreateCategory(category)
+            do {
+                try trackerCategoryStore.addCategory(category)
+            } catch {
+                print("Save category failed")
+            }
         }
         dismiss(animated: true)
     }

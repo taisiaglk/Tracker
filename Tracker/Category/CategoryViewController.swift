@@ -14,10 +14,18 @@ protocol CategoryViewControllerDelegate {
 
 final class CategoryViewController: UIViewController {
     
+    
     var delegate: CategoryViewControllerDelegate?
+    private let trackerCategoryStore: TrackerCategoryStoreProtocol = TrackerCategoryStore.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        do {
+            trackerCategories = try trackerCategoryStore.getCategories()
+        } catch {
+            print("Get categories failed")
+        }
         
         view.backgroundColor = .white_color
         
@@ -33,6 +41,9 @@ final class CategoryViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        trackerCategoryStore.setDelegate(self)
+        
     }
     
     private var trackerCategories: [TrackerCategory] = []
@@ -109,7 +120,6 @@ final class CategoryViewController: UIViewController {
     
     @objc private func pushAddCategoryButton() {
         let newCategoryViewController = NewCategoryViewController()
-        newCategoryViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: newCategoryViewController)
         present(navigationController, animated: true)
     }
@@ -134,14 +144,16 @@ final class CategoryViewController: UIViewController {
     }
 }
 
-extension CategoryViewController: NewCategoryViewControllerDelegate {
-    
-    func didCreateCategory(_ category: TrackerCategory) {
-        trackerCategories.append(category)
-        updateVisibility()
-        tableView.reloadData()
+extension CategoryViewController: TrackerCategoryStoreDelegate {
+    func didUpdate(_ update: TrackerCategoryStoreUpdate) {
+        do {
+            trackerCategories = try trackerCategoryStore.getCategories()
+            updateVisibility()
+            tableView.reloadData()
+        } catch {
+            print("Update failed")
+        }
     }
-    
 }
 
 extension CategoryViewController: UITableViewDataSource {

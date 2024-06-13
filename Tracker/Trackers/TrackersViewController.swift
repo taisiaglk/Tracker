@@ -13,6 +13,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        reloadData()
         addToScreen()
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -21,6 +22,10 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     
     var categories: [TrackerCategory] = [TrackerCategory(title: "База", trackers: [])]
     var completedTrackers: [TrackerRecord] = []
+    
+    private let trackerStore: TrackerStoreProtocol = TrackerStore.shared
+    private let trackerCategoryStore: TrackerCategoryStoreProtocol = TrackerCategoryStore.shared
+    private let trackerRecordStore: TrackerRecordStoreProtocol = TrackerRecordStore.shared
     
     private var addButton = UIButton()
     private var starImage = UIImageView()
@@ -174,6 +179,32 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         }
     }
     
+    private func reloadData() {
+        do {
+            categories = try trackerCategoryStore.getCategories()
+        } catch {
+            assertionFailure("Failed to get categories with \(error)")
+        }
+        
+        let trackers = categories.flatMap { category in
+            category.trackers
+        }
+        
+        let records = trackers.map { tracker -> [TrackerRecord] in
+            var records: [TrackerRecord] = []
+            
+            do {
+                records = try trackerRecordStore.recordsFetch(for: tracker)
+            } catch {
+                assertionFailure()
+            }
+            
+            return records
+        }
+        
+        completedTrackers = records.flatMap { $0 }
+    }
+    
     @objc private func addButtonTapped() {
         let createTrack = TrackerTypeViewController()
         createTrack.delegate = self
@@ -201,17 +232,27 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         dismiss(animated: true)
     }
     
+    private func saveTracker(_ tracker: Tracker, toCategory category: String) {
+        do {
+            if let existingCategory = categories.first(where: { $0.title == category }) {
+                try trackerStore.addTracker(tracker, toCategory: existingCategory)
+            } else {
+                let newCategory = TrackerCategory(title: category, trackers: [tracker])
+                try trackerCategoryStore.addCategory(newCategory)
+                try trackerStore.addTracker(tracker, toCategory: newCategory)
+            }
+        } catch {
+            print("Ошибка сохранения трекера: \(error)")
+        }
+    }
+
+    
     func didTapCreateButton(category: String, tracker: Tracker) {
         dismiss(animated: true)
-        if let categoryIndex = categories.firstIndex(where: { $0.title == category }) {
-            var updatedTrackers = categories[categoryIndex].trackers
-            updatedTrackers.append(tracker)
-            let updatedCategory = TrackerCategory(title: category, trackers: updatedTrackers)
-            
-            categories[categoryIndex] = updatedCategory
-        } else {
-            categories.append(TrackerCategory(title: category, trackers: [tracker]))
-        }
+        
+        saveTracker(tracker, toCategory: category)
+        
+        reloadData()
         collectionView.reloadData()
         updateVisibility()
     }
@@ -229,8 +270,8 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
 extension TrackersViewController: TrackerCellDelegate {
     func didTapDoneButton(cell: TrackerCell, with tracker: Tracker) {
         if isEnableToAdd {
-            let recordingTracker = TrackerRecord(id: tracker.id, date: currentDate)
-            if let index = completedTrackers.firstIndex(where: { $0.date == currentDate && $0.id == tracker.id }) {
+            let recordingTracker = TrackerRecord(idRecord: tracker.id, date: currentDate)
+            if let index = completedTrackers.firstIndex(where: { $0.date == currentDate && $0.idRecord == tracker.id }) {
                 completedTrackers.remove(at: index)
                 cell.changeImageButton(active: false)
                 cell.addOrSubtrack(value: false)
@@ -262,8 +303,8 @@ extension TrackersViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         let tracker = currentlyTrackers[indexPath.section].trackers[indexPath.row]
-        let daysCount = completedTrackers.filter { $0.id == tracker.id }.count
-        let active = completedTrackers.contains { $0.date == currentDate && $0.id == tracker.id }
+        let daysCount = completedTrackers.filter { $0.idRecord == tracker.id }.count
+        let active = completedTrackers.contains { $0.date == currentDate && $0.idRecord == tracker.id }
         cell.configure(with: tracker, days: daysCount, active: active)
         cell.delegate = self
         return cell
