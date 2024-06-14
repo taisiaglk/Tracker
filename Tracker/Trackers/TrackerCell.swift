@@ -158,15 +158,8 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     func daysString(count: Int) -> String {
-        var result: String
-        switch (count % 10) {
-        case 1: result = "\(count) день"
-        case 2: result = "\(count) дня"
-        case 3: result = "\(count) дня"
-        case 4: result = "\(count) дня"
-        default: result = "\(count) дней"
-        }
-        return result
+        let daysCounter = String.localizedStringWithFormat(NSLocalizedString("numberOfDays", comment: "numberOfDays"), count)
+        return daysCounter
     }
     
     @objc func didTapDoneButton() {

@@ -13,7 +13,6 @@ class StatisticsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         configureTrackersLabel()
-//        title = "Second вкладка"
     }
     
     private var trackersLabel = UILabel()

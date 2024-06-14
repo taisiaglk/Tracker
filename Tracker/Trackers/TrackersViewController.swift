@@ -62,7 +62,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     private func configureTrackersLabel() {
         view.addSubview(trackersLabel)
         trackersLabel.translatesAutoresizingMaskIntoConstraints = false
-        trackersLabel.text = "Трекеры"
+        trackersLabel.text = NSLocalizedString("trackers.title", comment: "")
         trackersLabel.font = UIFont.boldSystemFont(ofSize: 34)
         trackersLabel.textColor = .black
         NSLayoutConstraint.activate([
@@ -99,7 +99,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     private func configureLabel() {
         view.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Что будем отслеживать?"
+        label.text = NSLocalizedString("emptyState.text", comment: "")
         label.font = UIFont.systemFont(ofSize: 12)
         label.textAlignment = .center
         NSLayoutConstraint.activate([
@@ -113,7 +113,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         view.addSubview(searchField)
         searchField.translatesAutoresizingMaskIntoConstraints = false
         searchField.searchBarStyle = .minimal
-        searchField.placeholder = "Поиск"
+        searchField.placeholder = NSLocalizedString("searchTextField.placeholder", comment: "")
         
         NSLayoutConstraint.activate([
             searchField.topAnchor.constraint(equalTo: trackersLabel.bottomAnchor, constant: 7),
@@ -280,8 +280,8 @@ extension TrackersViewController: TrackerCellDelegate {
                 cell.addOrSubtrack(value: true)
             }
         } else {
-            let alert = UIAlertController(title: "\u{1F974}", message: "еще рано!", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "окей", style: .default, handler: nil))
+            let alert = UIAlertController(title: "\u{1F974}", message: NSLocalizedString("alert.description", comment: ""), preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("alert.okay", comment: ""), style: .default, handler: nil))
             present(alert, animated: true, completion: nil)
         }
         updateVisibility()

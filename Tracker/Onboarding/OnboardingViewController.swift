@@ -27,8 +27,8 @@ final class OnboardingViewController: UIPageViewController {
     }
     
     private lazy var pages: [OnboardingPageViewController] = [
-        OnboardingPageViewController(pageImage: "Onboarding1", pageText: "Отслеживайте только\nто, что хотите"),
-        OnboardingPageViewController(pageImage: "Onboarding2", pageText: "Даже если это\nне литры воды и йога")
+        OnboardingPageViewController(pageImage: "Onboarding1", pageText: NSLocalizedString("onboardingBlueLabel.title", comment: "")),
+        OnboardingPageViewController(pageImage: "Onboarding2", pageText: NSLocalizedString("onboardingRedLabel.title", comment: ""))
     ]
     
     override func viewDidLoad() {

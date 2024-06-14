@@ -16,7 +16,7 @@ final class ScheduleViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Расписание"
+        title = NSLocalizedString("schedule.title", comment: "")
         view.backgroundColor = .white
         
         weekdaysTable.dataSource = self
@@ -63,7 +63,7 @@ final class ScheduleViewController: UIViewController {
         readyButton.backgroundColor = .black
         readyButton.setTitleColor(.white, for: .normal)
         readyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        readyButton.setTitle("Готово", for: .normal)
+        readyButton.setTitle(NSLocalizedString("doneButton.text", comment: ""), for: .normal)
         readyButton.layer.cornerRadius = 16
         readyButton.addTarget(self, action: #selector(didTapRdyButton), for: .touchUpInside)
         

@@ -22,7 +22,7 @@ final class TrackerTypeViewController: UIViewController {
         buttonStack.addArrangedSubview(habitButton)
         habitButton.translatesAutoresizingMaskIntoConstraints = false
         habitButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        habitButton.setTitle("Привычка", for: .normal)
+        habitButton.setTitle(NSLocalizedString("habitButton.text", comment: ""), for: .normal)
         habitButton.setTitleColor(.white_color, for: .normal)
         habitButton.backgroundColor = .black_color
         habitButton.layer.cornerRadius = 16
@@ -37,7 +37,7 @@ final class TrackerTypeViewController: UIViewController {
         buttonStack.addArrangedSubview(eventButton)
         eventButton.translatesAutoresizingMaskIntoConstraints = false
         eventButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        eventButton.setTitle("Нерегулярное событие", for: .normal)
+        eventButton.setTitle(NSLocalizedString("irregularButton.text", comment: ""), for: .normal)
         eventButton.setTitleColor(.white_color, for: .normal)
         eventButton.backgroundColor = .black_color
         eventButton.layer.cornerRadius = 16
@@ -69,7 +69,7 @@ final class TrackerTypeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Создание трекера"
+        title = NSLocalizedString("addTracker.title", comment: "")
         view.backgroundColor = .white_color
         addToSCreen()
     }
@@ -79,12 +79,12 @@ final class TrackerTypeViewController: UIViewController {
     }
     
     @objc func didTapHabitButton() {
-        title = "Новая привычка"
+        title = NSLocalizedString("newHabit.title", comment: "")
         delegate?.didCreateTracker(with: .habit)
     }
     
     @objc func didTapEventButton() {
-        title = "Новое нерегулярное событие"
+        title = NSLocalizedString("irregularButton.text", comment: "")
         delegate?.didCreateTracker(with: .event)
     }
 }

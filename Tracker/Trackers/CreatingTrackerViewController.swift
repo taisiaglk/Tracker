@@ -60,7 +60,7 @@ final class CreatingTrackerViewController: UIViewController {
     private var messageHeightConstraint: NSLayoutConstraint?
     private var optionsTopConstraint: NSLayoutConstraint?
     
-    private let parametres = ["Категория", "Расписание"]
+    private let parametres = [NSLocalizedString("category.title", comment: ""), NSLocalizedString("schedule.title", comment: ""),]
     
     var emoji = [
         "🙂", "😻", "🌺", "🐶", "❤️", "😱",
@@ -135,7 +135,7 @@ final class CreatingTrackerViewController: UIViewController {
         nameTracker.backgroundColor = .background_color
         nameTracker.layer.cornerRadius = 16
         nameTracker.autocorrectionType = .yes
-        nameTracker.placeholder = "Введите название трекера"
+        nameTracker.placeholder = NSLocalizedString("newTrackerName.placeholder", comment: "")
         nameTracker.addTarget(self, action: #selector(didChangeTextOnNameTracker), for: .editingChanged)
         
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: nameTracker.frame.height))
@@ -159,7 +159,7 @@ final class CreatingTrackerViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             optionsTable.topAnchor.constraint(equalTo: nameTracker.bottomAnchor, constant: 16),
-            optionsTable.heightAnchor.constraint(equalToConstant: title == "Новая привычка" ? 150 : 75),
+            optionsTable.heightAnchor.constraint(equalToConstant: title == NSLocalizedString("newHabit.title", comment: "") ? 150 : 75),
             optionsTable.leadingAnchor.constraint(equalTo: nameTracker.leadingAnchor),
             optionsTable.trailingAnchor.constraint(equalTo: nameTracker.trailingAnchor)
         ])
@@ -171,7 +171,7 @@ final class CreatingTrackerViewController: UIViewController {
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         cancelButton.layer.cornerRadius = 16
         cancelButton.layer.masksToBounds = true
-        cancelButton.setTitle("Отменить", for: .normal)
+        cancelButton.setTitle(NSLocalizedString("cancelButton.text", comment: ""), for: .normal)
         cancelButton.setTitleColor(.red_color, for: .normal)
         cancelButton.backgroundColor = .white_color
         cancelButton.layer.borderWidth = 1
@@ -185,7 +185,7 @@ final class CreatingTrackerViewController: UIViewController {
         createButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         createButton.layer.cornerRadius = 16
         createButton.layer.masksToBounds = true
-        createButton.setTitle("Создать", for: .normal)
+        createButton.setTitle(NSLocalizedString("createButton.text", comment: ""), for: .normal)
         createButton.setTitleColor(.white, for: .normal)
         createButton.backgroundColor = .gray_color
         createButton.addTarget(self, action: #selector(didTapCreateButton), for: .touchUpInside)
@@ -254,7 +254,7 @@ final class CreatingTrackerViewController: UIViewController {
     
     private var scheduleString: String? {
         guard let schedule = data.schedule else { return nil }
-        if schedule.count == 7 { return "Каждый день" }
+        if schedule.count == 7 { return NSLocalizedString("everyDay.text", comment: "") }
         let short: [String] = schedule.map { $0.shortDay }
         return short.joined(separator: ", ")
     }
@@ -267,9 +267,9 @@ final class CreatingTrackerViewController: UIViewController {
     private func setTitle() {
         switch version {
         case .habit:
-            title = "Новая привычка"
+            title = NSLocalizedString("newHabit.title", comment: "")
         case .event:
-            title = "Новое нерегулярное событие"
+            title = NSLocalizedString("newIrregular.title", comment: "")
         }
     }
     
@@ -440,7 +440,7 @@ extension CreatingTrackerViewController: UICollectionViewDataSource {
         case 0:
             view.titleLabel.text = "Emoji"
         case 1:
-            view.titleLabel.text = "Цвет"
+            view.titleLabel.text = NSLocalizedString("color.title", comment: "")
         default:
             return UICollectionReusableView()
         }
