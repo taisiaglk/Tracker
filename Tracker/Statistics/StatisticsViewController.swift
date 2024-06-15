@@ -108,11 +108,27 @@ final class StatisticsViewController: UIViewController {
         view.backgroundColor = .white_color
         try? fetchStatistics()
         configureTitleHeader()
+        configureEmptyStatisticsScreen()
+        configureFilledStatisticsScreen()
+        checkEmptyStatistics()
+        updateVisibility()
+//        if completedTrackers.isEmpty {
+//            configureEmptyStatisticsScreen()
+//        } else {
+//            configureFilledStatisticsScreen()
+//            checkEmptyStatistics()
+//        }
+    }
+    
+    private func updateVisibility() {
         if completedTrackers.isEmpty {
-            configureEmptyStatisticsScreen()
+            emptyScreenImage.isHidden = false
+            emptyStatisticsLabel.isHidden = false
+            collectionView.isHidden = true
         } else {
-            configureFilledStatisticsScreen()
-            checkEmptyStatistics()
+            emptyScreenImage.isHidden = true
+            emptyStatisticsLabel.isHidden = true
+            collectionView.isHidden = false
         }
     }
     
@@ -120,6 +136,7 @@ final class StatisticsViewController: UIViewController {
         super.viewWillAppear(animated)
         try? fetchStatistics()
         checkEmptyStatistics()
+        updateVisibility()
     }
     
     private func checkEmptyStatistics() {

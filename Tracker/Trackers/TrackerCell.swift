@@ -10,6 +10,9 @@ import UIKit
 
 protocol TrackerCellDelegate: AnyObject {
     func didTapDoneButton(cell: TrackerCell, with tracker: Tracker)
+    func updateTrackerPinAction(tracker: Tracker)
+    func editTrackerAction(tracker: Tracker)
+    func deleteTrackerAction(tracker: Tracker)
 }
 
 final class TrackerCell: UICollectionViewCell {
@@ -36,7 +39,7 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     private func configureEmojiView() {
-        contentView.addSubview(emojiView)
+        cardView.addSubview(emojiView)
         emojiView.translatesAutoresizingMaskIntoConstraints = false
         emojiView.layer.cornerRadius = 12
         emojiView.backgroundColor = UIColor(red: 0xFF/255.0, green: 0xFF/255.0, blue: 0xFF/255.0, alpha: 0.2)
@@ -49,7 +52,7 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     private func configureEmojiLabel() {
-        contentView.addSubview(emojiLabel)
+        cardView.addSubview(emojiLabel)
         emojiLabel.font = UIFont.systemFont(ofSize: 16)
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -59,7 +62,7 @@ final class TrackerCell: UICollectionViewCell {
     }
     
     private func configureTrackerLabel() {
-        contentView.addSubview(trackerLabel)
+        cardView.addSubview(trackerLabel)
         trackerLabel.translatesAutoresizingMaskIntoConstraints = false
         trackerLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
         trackerLabel.textColor = UIColor.white
@@ -86,7 +89,6 @@ final class TrackerCell: UICollectionViewCell {
         contentView.addSubview(execButton)
         execButton.translatesAutoresizingMaskIntoConstraints = false
         execButton.setImage(UIImage(systemName: "plus"), for: .normal)
-//        let image = isCompletedToday ? UIImage(systemName: "checkmark", withConfiguration: pointSize) : UIImage(systemName: "plus", withConfiguration: pointSize)
         execButton.tintColor = .white_color
         execButton.layer.cornerRadius = 17
         execButton.addTarget(self, action: #selector(didTapDoneButton), for: .touchUpInside)
@@ -96,6 +98,11 @@ final class TrackerCell: UICollectionViewCell {
             execButton.widthAnchor.constraint(equalToConstant: 34),
             execButton.heightAnchor.constraint(equalToConstant: 34)
         ])
+    }
+    
+    private func configureContextMenu() {
+        let contextMenu = UIContextMenuInteraction(delegate: self)
+        cardView.addInteraction(contextMenu)
     }
     
     func addToScreen() {
@@ -144,6 +151,7 @@ final class TrackerCell: UICollectionViewCell {
         execButton.setImage(UIImage(systemName: active ? "checkmark" : "plus"), for: .normal)
         execButton.backgroundColor = tracker.color
         changeImageButton(active: active)
+        configureContextMenu()
     }
     
     func changeImageButton(active: Bool) {
@@ -167,6 +175,40 @@ final class TrackerCell: UICollectionViewCell {
     @objc func didTapDoneButton() {
         guard let tracker else { return }
         delegate?.didTapDoneButton(cell: self, with: tracker)
+    }
+}
+
+extension TrackerCell: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        
+        let unpinTracker = NSLocalizedString("unpinTracker.text", comment: "")
+        let pinTracker = NSLocalizedString("pinTracker.text", comment: "")
+        
+        let titleTextIsPinned = (self.tracker?.isPinned ?? false) ? unpinTracker : pinTracker
+        
+
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider:  { suggestedActions in
+
+            let pinAction = UIAction(title: titleTextIsPinned) { action in
+                guard let tracker = self.tracker else { return }
+                
+                self.delegate?.updateTrackerPinAction(tracker: tracker)
+            }
+
+            let editAction = UIAction(title: "Редактировать") { action in
+                guard let tracker = self.tracker else { return }
+                
+                self.delegate?.editTrackerAction(tracker: tracker)
+            }
+
+            let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { action in
+                guard let tracker = self.tracker else { return }
+                
+                self.delegate?.deleteTrackerAction(tracker: tracker)
+            }
+
+            return UIMenu(children: [pinAction, editAction, deleteAction])
+        })
     }
 }
 

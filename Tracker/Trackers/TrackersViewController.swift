@@ -78,7 +78,6 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     private func configureAddButton() {
         view.addSubview(addButton)
         addButton.translatesAutoresizingMaskIntoConstraints = false
-//        addButton.setImage(UIImage(named: "AddTracker"), for: .normal)
         let image = UIImage(named: "AddTracker")?.withRenderingMode(.alwaysTemplate)
             addButton.setImage(image, for: .normal)
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
@@ -446,7 +445,85 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     }
 }
 
+extension TrackersViewController {
+    private func showDeleteAlert(tracker: Tracker) {
+        let alert = UIAlertController(
+            title: nil,
+            message: NSLocalizedString("showDeleteAlert.text", comment: ""),
+            preferredStyle: .actionSheet
+        )
+        let deleteButton = UIAlertAction(
+            title: NSLocalizedString("delete.text", comment: ""),
+            style: .destructive) { [weak self] _ in
+                guard let self = self else { return }
+                do {
+                    try self.deleteTrackerInCategory(tracker: tracker)
+                } catch {
+                    print("Error deleting tracker: \(error)")
+                }
+            }
+        let cencelButton = UIAlertAction(
+            title: NSLocalizedString("cancelButton.text", comment: ""),
+            style: .cancel
+        )
+        alert.addAction(deleteButton)
+        alert.addAction(cencelButton)
+        self.present(alert, animated: true)
+    }
+    
+    private func deleteTrackerInCategory(tracker: Tracker) throws {
+        do {
+            
+//            try trackerRecordStore.deleteAllRecordForID(for: tracker.id)
+            trackerStore.deleteTrackers(tracker: tracker)
+            try fetchCategories()
+//            reloadData()
+            reloadFilteredCategories(text: searchField.text, date: currentDate)
+            updateVisibility()
+        } catch {
+            print("Delete tracker is failed")
+        }
+    }
+    
+    private func fetchCategories() throws {
+//        do {
+//            do {
+//                categories = try trackerCategoryStore.getCategories()
+//            } catch {
+//                assertionFailure("Failed to get categories with \(error)")
+//            }
+////            let coreDataCategories = try trackerCategoryStore.fetchAllCategories()
+////            categories = try coreDataCategories.compactMap { coreDataCategory in
+////                return try trackerCategoryStore.convertToTrackerCategory(from: coreDataCategory)
+////            }
+////            reloadPinTrackers()
+//        } catch {
+//            print("fetchCategories error")
+//        }
+        do {
+            categories = try trackerCategoryStore.getCategories()
+        } catch {
+            assertionFailure("Failed to get categories with \(error)")
+        }
+    }
+}
+
 extension TrackersViewController: TrackerCellDelegate {
+    func updateTrackerPinAction(tracker: Tracker) {
+//        try? self.pinTracker(tracker)
+//        private func editingTrackers(tracker: Tracker) {
+            
+//        }
+    }
+    
+    func editTrackerAction(tracker: Tracker) {
+//        self.editingTrackers(tracker: tracker)er(rootViewController: configureTrackerViewController)
+    }
+    
+    func deleteTrackerAction(tracker: Tracker) {
+        self.showDeleteAlert(tracker: tracker)
+    }
+    
     
     func didTapDoneButton(cell: TrackerCell, with tracker: Tracker) {
         if isEnableToAdd {
@@ -496,8 +573,6 @@ extension TrackersViewController: UICollectionViewDataSource {
         }
         let tracker = currentlyTrackers[indexPath.section].trackers[indexPath.row]
         let daysCount = completedTrackers.filter { $0.idRecord == tracker.id }.count
-        let data1 = currentDate
-        let data2 = currentDate
         let active = completedTrackers.contains { Calendar.current.isDate($0.date, inSameDayAs: currentDate)/* $0.date == currentDate*/ && $0.idRecord == tracker.id }
         cell.configure(with: tracker, days: daysCount, active: active)
         cell.delegate = self
