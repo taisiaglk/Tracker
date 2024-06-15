@@ -86,6 +86,7 @@ final class TrackerCell: UICollectionViewCell {
         contentView.addSubview(execButton)
         execButton.translatesAutoresizingMaskIntoConstraints = false
         execButton.setImage(UIImage(systemName: "plus"), for: .normal)
+//        let image = isCompletedToday ? UIImage(systemName: "checkmark", withConfiguration: pointSize) : UIImage(systemName: "plus", withConfiguration: pointSize)
         execButton.tintColor = .white_color
         execButton.layer.cornerRadius = 17
         execButton.addTarget(self, action: #selector(didTapDoneButton), for: .touchUpInside)
@@ -140,6 +141,7 @@ final class TrackerCell: UICollectionViewCell {
         cardView.backgroundColor = tracker.color
         emojiLabel.text = tracker.emoji
         trackerLabel.text = tracker.name
+        execButton.setImage(UIImage(systemName: active ? "checkmark" : "plus"), for: .normal)
         execButton.backgroundColor = tracker.color
         changeImageButton(active: active)
     }

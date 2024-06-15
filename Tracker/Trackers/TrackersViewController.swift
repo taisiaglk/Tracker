@@ -447,7 +447,7 @@ extension TrackersViewController: TrackerCellDelegate {
     
     func didTapDoneButton(cell: TrackerCell, with tracker: Tracker) {
         if isEnableToAdd {
-            if let index = completedTrackers.firstIndex(where: { $0.date == currentDate && $0.idRecord == tracker.id }) {
+            if let index = completedTrackers.firstIndex(where: { Calendar.current.isDate($0.date, inSameDayAs: currentDate)/*$0.date == currentDate*/ && $0.idRecord == tracker.id }) {
                 do {
                     try trackerRecordStore.deleteRecord(with: tracker.id, by: currentDate)
                     completedTrackers.remove(at: index)
@@ -493,7 +493,9 @@ extension TrackersViewController: UICollectionViewDataSource {
         }
         let tracker = currentlyTrackers[indexPath.section].trackers[indexPath.row]
         let daysCount = completedTrackers.filter { $0.idRecord == tracker.id }.count
-        let active = completedTrackers.contains { $0.date == currentDate && $0.idRecord == tracker.id }
+        let data1 = currentDate
+        let data2 = currentDate
+        let active = completedTrackers.contains { Calendar.current.isDate($0.date, inSameDayAs: currentDate)/* $0.date == currentDate*/ && $0.idRecord == tracker.id }
         cell.configure(with: tracker, days: daysCount, active: active)
         cell.delegate = self
         return cell
