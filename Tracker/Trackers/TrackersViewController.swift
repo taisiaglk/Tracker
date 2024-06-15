@@ -12,7 +12,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .white_color
         reloadData()
         addToScreen()
         collectionView.dataSource = self
@@ -68,7 +68,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         trackersLabel.translatesAutoresizingMaskIntoConstraints = false
         trackersLabel.text = NSLocalizedString("trackers.title", comment: "")
         trackersLabel.font = UIFont.boldSystemFont(ofSize: 34)
-        trackersLabel.textColor = .black
+        trackersLabel.textColor = .black_color
         NSLayoutConstraint.activate([
             trackersLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 44),
             trackersLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16)
@@ -78,8 +78,11 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     private func configureAddButton() {
         view.addSubview(addButton)
         addButton.translatesAutoresizingMaskIntoConstraints = false
-        addButton.setImage(UIImage(named: "AddTracker"), for: .normal)
+//        addButton.setImage(UIImage(named: "AddTracker"), for: .normal)
+        let image = UIImage(named: "AddTracker")?.withRenderingMode(.alwaysTemplate)
+            addButton.setImage(image, for: .normal)
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+        addButton.tintColor = .black_color
         NSLayoutConstraint.activate([
             addButton.widthAnchor.constraint(equalToConstant: 42),
             addButton.heightAnchor.constraint(equalToConstant: 42),

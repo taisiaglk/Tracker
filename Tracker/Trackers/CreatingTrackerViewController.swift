@@ -186,7 +186,7 @@ final class CreatingTrackerViewController: UIViewController {
         createButton.layer.cornerRadius = 16
         createButton.layer.masksToBounds = true
         createButton.setTitle(NSLocalizedString("createButton.text", comment: ""), for: .normal)
-        createButton.setTitleColor(.white, for: .normal)
+        createButton.setTitleColor(.white_color, for: .normal)
         createButton.backgroundColor = .gray_color
         createButton.addTarget(self, action: #selector(didTapCreateButton), for: .touchUpInside)
         createButton.isEnabled = false
@@ -211,7 +211,7 @@ final class CreatingTrackerViewController: UIViewController {
     private func configureEmojiAndColorCollectionView() {
         scrollView.addSubview(emojiAndColorCollectionView)
         emojiAndColorCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        emojiAndColorCollectionView.backgroundColor = .white
+        emojiAndColorCollectionView.backgroundColor = .white_color
         emojiAndColorCollectionView.isScrollEnabled = false
         emojiAndColorCollectionView.register(EmojiAndColorCell.self, forCellWithReuseIdentifier: EmojiAndColorCell.reuseIdentifier)
         emojiAndColorCollectionView.register(EmojiAndColorHeaderSectionView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: EmojiAndColorHeaderSectionView.reuseIdentifier)

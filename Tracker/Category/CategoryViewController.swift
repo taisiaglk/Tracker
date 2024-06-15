@@ -95,7 +95,7 @@ final class CategoryViewController: UIViewController {
         addButton.layer.cornerRadius = 16
         addButton.layer.masksToBounds = true
         addButton.setTitle(NSLocalizedString("addCategoryButton.text", comment: ""), for: .normal)
-        addButton.setTitleColor(.white, for: .normal)
+        addButton.setTitleColor(.white_color, for: .normal)
         addButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         addButton.addTarget(self, action: #selector(pushAddCategoryButton), for: .touchUpInside)
     }

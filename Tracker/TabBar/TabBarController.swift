@@ -13,7 +13,7 @@ final class TabBarController: UITabBarController {
         super.viewDidLoad()
         
         let separator = UIView(frame: CGRect(x: 0, y: 0, width: tabBar.frame.width, height: 1))
-        separator.backgroundColor = .gray_color
+        separator.backgroundColor = .gray_separator
         tabBar.addSubview(separator)
         
         let trackersViewController = TrackersViewController()
