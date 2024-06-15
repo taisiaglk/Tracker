@@ -161,8 +161,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     }
     
     private func configureFilterButton() {
-        view.addSubview(filterButton
-        )
+        view.addSubview(filterButton)
         let textTitle = NSLocalizedString("filterButton.text", comment: "")
         filterButton.translatesAutoresizingMaskIntoConstraints = false
         filterButton.setTitle(textTitle, for: .normal)
@@ -249,7 +248,6 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         let filtersViewController = FiltersViewController()
         filtersViewController.delegate = self
         filtersViewController.selectedFilter = selectedFilter
-//        analyticsService.report(event: "click", params: ["screen" : "Main", "item" : "filter"])
         present(filtersViewController, animated: true)
     }
     
@@ -423,7 +421,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
             print("Ошибка сохранения трекера: \(error)")
         }
     }
-
+    
     
     func didTapCreateButton(category: String, tracker: Tracker) {
         dismiss(animated: true)
@@ -446,17 +444,30 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
 }
 
 extension TrackersViewController: TrackerCellDelegate {
+    
     func didTapDoneButton(cell: TrackerCell, with tracker: Tracker) {
         if isEnableToAdd {
-            let recordingTracker = TrackerRecord(idRecord: tracker.id, date: currentDate)
             if let index = completedTrackers.firstIndex(where: { $0.date == currentDate && $0.idRecord == tracker.id }) {
-                completedTrackers.remove(at: index)
-                cell.changeImageButton(active: false)
-                cell.addOrSubtrack(value: false)
+                do {
+                    try trackerRecordStore.deleteRecord(with: tracker.id, by: currentDate)
+                    completedTrackers.remove(at: index)
+                    cell.changeImageButton(active: false)
+                    cell.addOrSubtrack(value: false)
+                } catch {
+                    print("Remove task failed: \(error)")
+                }
+                
             } else {
-                completedTrackers.append(recordingTracker)
-                cell.changeImageButton(active: true)
-                cell.addOrSubtrack(value: true)
+                do {
+                    try trackerRecordStore.addRecord(with: tracker.id, by: currentDate)
+                    
+                    let trackerRecord = TrackerRecord(idRecord: tracker.id, date: currentDate)
+                    completedTrackers.append(trackerRecord)
+                    cell.changeImageButton(active: true)
+                    cell.addOrSubtrack(value: true)
+                } catch {
+                    print("Complete task failed")
+                }
             }
         } else {
             let alert = UIAlertController(title: "\u{1F974}", message: NSLocalizedString("alert.description", comment: ""), preferredStyle: .alert)

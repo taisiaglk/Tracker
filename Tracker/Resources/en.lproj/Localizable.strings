@@ -67,3 +67,7 @@
 
 "alert.description" = "It's still early!";
 "alert.okay" = "okay";
+
+"statistics.title" = "Statistics";
+"emptyStatistics.text" = "There is nothing to analyze yet";
+"getStatisticsCalculation.text" = "Trackers completed";

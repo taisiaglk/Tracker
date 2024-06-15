@@ -45,6 +45,8 @@
 		006DE9202C1CAE590063265D /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006DE91F2C1CAE590063265D /* AnalyticsService.swift */; };
 		006DE9222C1CAFDA0063265D /* PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006DE9212C1CAFDA0063265D /* PlaceholderView.swift */; };
 		006DE9242C1CB08A0063265D /* EmptySearchPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006DE9232C1CB08A0063265D /* EmptySearchPlaceholderView.swift */; };
+		006DE9262C1DBA8A0063265D /* StatisticsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006DE9252C1DBA8A0063265D /* StatisticsCell.swift */; };
+		006DE92A2C1DBC4C0063265D /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006DE9292C1DBC4C0063265D /* Date+Extension.swift */; };
 		00BB57BC2BEB8C3100059BB5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BB57BB2BEB8C3100059BB5 /* AppDelegate.swift */; };
 		00BB57BE2BEB8C3100059BB5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BB57BD2BEB8C3100059BB5 /* SceneDelegate.swift */; };
 		00BB57C02BEB8C3100059BB5 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BB57BF2BEB8C3100059BB5 /* TabBarController.swift */; };
@@ -105,6 +107,8 @@
 		006DE91F2C1CAE590063265D /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		006DE9212C1CAFDA0063265D /* PlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderView.swift; sourceTree = "<group>"; };
 		006DE9232C1CB08A0063265D /* EmptySearchPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySearchPlaceholderView.swift; sourceTree = "<group>"; };
+		006DE9252C1DBA8A0063265D /* StatisticsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsCell.swift; sourceTree = "<group>"; };
+		006DE9292C1DBC4C0063265D /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		00BB57B82BEB8C3100059BB5 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00BB57BB2BEB8C3100059BB5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		00BB57BD2BEB8C3100059BB5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -163,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				0000C31E2BEB96FF007F8B8D /* StatisticsViewController.swift */,
+				006DE9252C1DBA8A0063265D /* StatisticsCell.swift */,
 			);
 			path = Statistics;
 			sourceTree = "<group>";
@@ -324,6 +329,7 @@
 				0000C3C22BF3DD0B007F8B8D /* Category */,
 				0000C3202BEB9707007F8B8D /* Statistics */,
 				0000C3192BEB95C8007F8B8D /* UIColor+Extensions.swift */,
+				006DE9292C1DBC4C0063265D /* Date+Extension.swift */,
 				00BB57C42BEB8C3200059BB5 /* Assets.xcassets */,
 				00BB57C62BEB8C3200059BB5 /* LaunchScreen.storyboard */,
 				00BB57C92BEB8C3200059BB5 /* Info.plist */,
@@ -529,9 +535,11 @@
 			files = (
 				0000C3C62BF3E20B007F8B8D /* CategoryViewController.swift in Sources */,
 				00BB57C02BEB8C3100059BB5 /* TabBarController.swift in Sources */,
+				006DE92A2C1DBC4C0063265D /* Date+Extension.swift in Sources */,
 				0000C3C42BF3DFDA007F8B8D /* CategoryCell.swift in Sources */,
 				00BB57BC2BEB8C3100059BB5 /* AppDelegate.swift in Sources */,
 				0000C3E02BF808EC007F8B8D /* Tracker.xcdatamodeld in Sources */,
+				006DE9262C1DBA8A0063265D /* StatisticsCell.swift in Sources */,
 				0000C4212C136515007F8B8D /* CategoryViewModel.swift in Sources */,
 				0000C3E52BF80A63007F8B8D /* EmojiAndColorCell.swift in Sources */,
 				0000C3462BF010C6007F8B8D /* TrackerCategory.swift in Sources */,

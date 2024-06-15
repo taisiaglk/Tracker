@@ -67,3 +67,7 @@
 
 "alert.description" = "еще рано!";
 "alert.okay" = "окей";
+
+"statistics.title" = "Статистика";
+"emptyStatistics.text" = "Анализировать пока нечего";
+"getStatisticsCalculation.text" = "Трекеров завершено";
