@@ -22,9 +22,12 @@ protocol TrackerStoreDelegate: AnyObject {
 }
 
 protocol TrackerStoreProtocol {
+    func pinTrackerCoreData(_ tracker: Tracker) throws
     func setDelegate(_ delegate: TrackerStoreDelegate)
     func fetchTracker(_ trackerCoreData: TrackerCoreData) throws -> Tracker
     func addTracker(_ tracker: Tracker, toCategory category: TrackerCategory) throws
+    func deleteTrackers(tracker: Tracker)
+    func updateTracker(_ tracker: Tracker, to category: TrackerCategory) throws
 }
 
 final class TrackerStore: NSObject {
@@ -80,10 +83,12 @@ final class TrackerStore: NSObject {
         guard let id = trackerCoreData.idTracker,
               let title = trackerCoreData.name,
               let colorString = trackerCoreData.color,
-              let emoji = trackerCoreData.emoji else {
+              let emoji = trackerCoreData.emoji
+        else {
             throw TrackerStoreError.decodingErrorInvalidID
         }
         
+        let isPinned = trackerCoreData.isPinned
         let color = UIColor.color(from: colorString)
         let schedule = WeekDay.calculateScheduleArray(from: trackerCoreData.schedule)
         
@@ -92,17 +97,18 @@ final class TrackerStore: NSObject {
             name: title,
             color: color,
             emoji: emoji,
-            schedule: schedule
+            schedule: schedule,
+            isPinned: isPinned
         )
     }
     
     func addTracker(_ tracker: Tracker, to category: TrackerCategory) throws {
         let trackerCategoryCoreData = try trackerCategoryStore.fetchCategoryCoreData(for: category)
-
+        
         // Check if tracker already exists
         let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "idTracker == %@", tracker.id as CVarArg)
-
+        
         let existingTrackers = try context.fetch(fetchRequest)
         if existingTrackers.isEmpty {
             let trackerCoreData = TrackerCoreData(context: context)
@@ -112,6 +118,7 @@ final class TrackerStore: NSObject {
             trackerCoreData.emoji = tracker.emoji
             trackerCoreData.schedule = WeekDay.calculateScheduleValue(for: tracker.schedule ?? [])
             trackerCoreData.category = trackerCategoryCoreData
+            trackerCoreData.isPinned = tracker.isPinned
             
             try saveContext()
         } else {
@@ -129,6 +136,26 @@ final class TrackerStore: NSObject {
         }
     }
     
+    func updateTracker(with tracker: Tracker, to category: TrackerCategory) throws {
+        let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
+        fetchRequest.predicate = NSPredicate(format: "idTracker == %@", tracker.id as CVarArg)
+        do {
+//            let existingTrackers = try context.fetch(fetchRequest)
+            
+            let existingTrackers = try context.fetch(fetchRequest)
+            if existingTrackers.isEmpty {
+                let trackerCoreData = TrackerCoreData(context: context)
+                trackerCoreData.idTracker = tracker.id
+                trackerCoreData.name = tracker.name
+                trackerCoreData.color = tracker.color.hexString()
+                trackerCoreData.emoji = tracker.emoji
+                trackerCoreData.schedule = WeekDay.calculateScheduleValue(for: tracker.schedule ?? [])
+//                trackerCoreData.category = trackerCategoryCoreData
+                trackerCoreData.isPinned = tracker.isPinned
+                try saveContext()
+            }
+        }
+    }
 }
 
 extension TrackerStore: NSFetchedResultsControllerDelegate {
@@ -181,5 +208,45 @@ extension TrackerStore: TrackerStoreProtocol {
     
     func addTracker(_ tracker: Tracker, toCategory category: TrackerCategory) throws {
         try addTracker(tracker, to: category)
+    }
+    
+    func updateTracker(_ tracker: Tracker, to category: TrackerCategory) throws {
+        try updateTracker(with: tracker, to: category)
+    }
+    
+    func pinTrackerCoreData(_ tracker: Tracker) throws {
+        let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
+        fetchRequest.predicate = NSPredicate(format: "idTracker == %@", tracker.id as CVarArg)
+        
+        do {
+            guard let trackerCoreData = try? context.fetch(fetchRequest) else { return }
+            if let trackerToPin = trackerCoreData.first {
+                if trackerToPin.isPinned == false {
+                    trackerToPin.isPinned = true
+                } else if trackerToPin.isPinned == true {
+                    trackerToPin.isPinned = false
+                }
+                try context.save()
+            }
+        } catch {
+            print("Pin tracker Failed")
+        }
+    }
+    
+    func deleteTrackers(tracker: Tracker) {
+        let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
+        fetchRequest.predicate = NSPredicate(format: "idTracker == %@", tracker.id as CVarArg)
+        do {
+            let tracker = try context.fetch(fetchRequest)
+            
+            if let trackerToDelete = tracker.first {
+                context.delete(trackerToDelete)
+                try context.save()
+            } else {
+                print("Delete tracker error")
+            }
+        } catch {
+            print("Delete tracker error")
+        }
     }
 }

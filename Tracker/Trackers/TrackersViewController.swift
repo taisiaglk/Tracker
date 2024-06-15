@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegate, UICollectionViewDelegate, UISearchBarDelegate, CreatingTrackerViewControllerDelegate {
+class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegate, UICollectionViewDelegate, UISearchBarDelegate, CreatingTrackerViewControllerDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,10 +22,12 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     
     var categories: [TrackerCategory] = [TrackerCategory(title: "База", trackers: [])]
     var completedTrackers: [TrackerRecord] = []
+    var selectedFilter: Filter = .all
     
     private let trackerStore: TrackerStoreProtocol = TrackerStore.shared
     private let trackerCategoryStore: TrackerCategoryStoreProtocol = TrackerCategoryStore.shared
     private let trackerRecordStore: TrackerRecordStoreProtocol = TrackerRecordStore.shared
+    private var filteredCategories: [TrackerCategory] = []
     
     private var addButton = UIButton()
     private var starImage = UIImageView()
@@ -34,6 +36,8 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     let searchField = UISearchBar()
     let datePicker = UIDatePicker()
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    
+    let filterButton = UIButton(type: .system)
     
     private var currentDate = Date()
     private var isEnableToAdd = true
@@ -156,6 +160,26 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         ])
     }
     
+    private func configureFilterButton() {
+        view.addSubview(filterButton
+        )
+        let textTitle = NSLocalizedString("filterButton.text", comment: "")
+        filterButton.translatesAutoresizingMaskIntoConstraints = false
+        filterButton.setTitle(textTitle, for: .normal)
+        filterButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        filterButton.setTitleColor(.white, for: .normal)
+        filterButton.backgroundColor = .blue_color
+        filterButton.layer.cornerRadius = 16
+        filterButton.addTarget(self, action: #selector(didTapFilterButton), for: .touchUpInside)
+        
+        NSLayoutConstraint.activate([
+            filterButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
+            filterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            filterButton.widthAnchor.constraint(equalToConstant: 114),
+            filterButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    
     private func addToScreen() {
         configureTrackersLabel()
         configureAddButton()
@@ -164,6 +188,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         configureCollectionView()
         configureStarImage()
         configureLabel()
+        configureFilterButton()
         updateVisibility()
     }
     
@@ -203,6 +228,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         }
         
         completedTrackers = records.flatMap { $0 }
+        filteredCategories = categories
     }
     
     @objc private func addButtonTapped() {
@@ -219,6 +245,14 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         updateVisibility()
     }
     
+    @objc private func didTapFilterButton() {
+        let filtersViewController = FiltersViewController()
+        filtersViewController.delegate = self
+        filtersViewController.selectedFilter = selectedFilter
+//        analyticsService.report(event: "click", params: ["screen" : "Main", "item" : "filter"])
+        present(filtersViewController, animated: true)
+    }
+    
     private func hideKeyboard() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tap)
@@ -226,6 +260,151 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     
     @objc func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    private func filteringTrackers(completed: Bool) {
+        filteredCategories = filteredCategories.compactMap { category in
+            let trackers = category.trackers.filter { tracker in
+                completed ? isTrackerCompletedToday(id: tracker.id)
+                : !isTrackerCompletedToday(id: tracker.id)
+            }
+            if trackers.isEmpty { return nil }
+            return TrackerCategory(title: category.title, trackers: trackers)
+        }
+    }
+    
+    private func isTrackerCompletedToday(id: UUID) -> Bool {
+        completedTrackers.contains {
+            isMatchRecord(model: $0, with: id)
+        }
+    }
+    
+    private func isMatchRecord(model: TrackerRecord, with trackerID: UUID) -> Bool {
+        return model.idRecord == trackerID && Calendar.current.isDate(model.date, inSameDayAs: currentDate)
+    }
+    
+    private func isSameTrackerRecord(trackerRecord: TrackerRecord, id: UUID) -> Bool {
+        let isSameDay = Calendar.current.isDate(trackerRecord.date, inSameDayAs: datePicker.date)
+        return trackerRecord.idRecord == id && isSameDay
+    }
+    
+    private func reloadFilteredCategories(text: String?, date: Date) {
+        let calendar = Calendar.current
+        let filteredWeekDay = calendar.component(.weekday, from: date)
+        let filterText = (text ?? "").lowercased()
+        
+        switch selectedFilter {
+        case .all:
+            filteredCategories = categories.compactMap { category in
+                let trackers = category.trackers.filter { tracker in
+                    let textCondition = filterText.isEmpty || tracker.name.lowercased().contains(filterText)
+                    
+                    let dateCondition = tracker.schedule!.contains(where: { weekDay in
+                        weekDay.rawValue == filteredWeekDay
+                    }) == true || tracker.schedule!.isEmpty
+                    
+                    return textCondition && dateCondition
+                }
+                
+                if trackers.isEmpty {
+                    return nil
+                }
+                
+                return TrackerCategory(title: category.title, trackers: trackers)
+            }
+            
+        case .today:
+            filteredCategories = categories.compactMap { category in
+                let trackers = category.trackers.filter { tracker in
+                    let textCondition = filterText.isEmpty || tracker.name.lowercased().contains(filterText)
+                    
+                    let dateCondition = tracker.schedule!.contains(where: { weekDay in
+                        weekDay.rawValue == filteredWeekDay
+                    }) == true || tracker.schedule!.isEmpty
+                    
+                    return textCondition && dateCondition
+                }
+                
+                if trackers.isEmpty {
+                    return nil
+                }
+                
+                return TrackerCategory(title: category.title, trackers: trackers)
+            }
+            
+        case .completed:
+            filteredCategories = categories.compactMap { category in
+                let trackers = category.trackers.filter { tracker in
+                    let textCondition = filterText.isEmpty || tracker.name.lowercased().contains(filterText)
+                    
+                    let dateCondition = tracker.schedule!.contains(where: { weekDay in
+                        weekDay.rawValue == filteredWeekDay
+                    }) == true || tracker.schedule!.isEmpty
+                    
+                    let completedCondition = try? trackerRecordStore
+                        .recordsFetch(for: tracker)
+                        .contains(where: { record in
+                            record.idRecord == tracker.id &&
+                            Calendar.current.isDate(record.date, inSameDayAs: currentDate)
+                        })
+                    
+                    return textCondition && dateCondition && (completedCondition ?? false)
+                }
+                
+                if trackers.isEmpty {
+                    return nil
+                }
+                
+                return TrackerCategory(title: category.title, trackers: trackers)
+            }
+            
+        case .uncompleted:
+            filteredCategories = categories.compactMap { category in
+                let trackers = category.trackers.filter { tracker in
+                    let textCondition = filterText.isEmpty || tracker.name.lowercased().contains(filterText)
+                    
+                    let dateCondition = tracker.schedule!.contains(where: { weekDay in
+                        weekDay.rawValue == filteredWeekDay
+                    }) == true || tracker.schedule!.isEmpty
+                    
+                    let completedCondition = try? !trackerRecordStore
+                        .recordsFetch(for: tracker)
+                        .contains(where: { record in
+                            record.idRecord == tracker.id &&
+                            Calendar.current.isDate(record.date, inSameDayAs: currentDate)
+                        })
+                    
+                    return textCondition && dateCondition && (completedCondition ?? false)
+                }
+                
+                if trackers.isEmpty {
+                    return nil
+                }
+                
+                return TrackerCategory(title: category.title, trackers: trackers)
+            }
+            
+        default: break
+        }
+        
+        collectionView.reloadData()
+        reloadPlaceholder()
+    }
+    private let placeholderView = PlaceholderView()
+    private let emptySearchPlaceholderView = EmptySearchPlaceholderView()
+    
+    private func reloadPlaceholder() {
+        let isPlaceholderVisible = filteredCategories.isEmpty && (searchField.text ?? "").isEmpty &&
+        selectedFilter == .all
+        
+        placeholderView.isHidden = !isPlaceholderVisible
+        filterButton.isHidden = isPlaceholderVisible
+        
+        let isEmptySearchVisible = filteredCategories.isEmpty &&
+        (!(searchField.text ?? "").isEmpty ||
+         selectedFilter != .all)
+        
+        emptySearchPlaceholderView.isHidden = !isEmptySearchVisible
     }
     
     func didTapCancelButton() {
@@ -343,6 +522,31 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+extension TrackersViewController: FiltersViewControllerDelegate {
+    func filterSelected(filter: Filter) {
+        selectedFilter = filter
+        searchField.text = ""
+        
+        switch filter {
+        case .all:
+            filterButton.setTitleColor(.white_color, for: .normal)
+            
+        case .today:
+            datePicker.setDate(Date(), animated: false)
+            currentDate = datePicker.date
+            filterButton.setTitleColor(.white_color, for: .normal)
+            
+        case .completed:
+            filterButton.setTitleColor(.white_color, for: .normal)
+            
+        case .uncompleted:
+            filterButton.setTitleColor(.white_color, for: .normal)
+        }
+        
+        reloadFilteredCategories(text: searchField.text, date: currentDate)
+    }
+}
+
 struct GeometricParams {
     let cellCount: Int
     let leftInset: CGFloat
@@ -358,3 +562,5 @@ struct GeometricParams {
         self.paddingWidth = leftInset + rightInset + CGFloat(cellCount - 1) * cellSpacing
     }
 }
+
+

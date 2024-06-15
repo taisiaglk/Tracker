@@ -291,7 +291,7 @@ final class CreatingTrackerViewController: UIViewController {
         guard let category = descr.title,
               let emoji = data.emoji,
               let color = data.color else { return }
-        let createNewTracker = Tracker(id: UUID(), name: data.name, color: color, emoji: emoji, schedule: data.schedule)
+        let createNewTracker = Tracker(id: UUID(), name: data.name, color: color, emoji: emoji, schedule: data.schedule, isPinned: false)
         delegate?.didTapCreateButton(category: category, tracker: createNewTracker)
     }
     
