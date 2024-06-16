@@ -319,9 +319,11 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         
         completedTrackers = records.flatMap { $0 }
         //        filteredCategories = categories
+        reloadPinTrackers()
         filteredCategories = categories.filter { category in
             !category.trackers.isEmpty
         }
+        
     }
     
     @objc private func addButtonTapped() {
