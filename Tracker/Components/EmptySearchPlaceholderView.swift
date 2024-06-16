@@ -15,7 +15,6 @@ final class EmptySearchPlaceholderView: UIView {
     
     private func configureEmptySearchImage() {
         addSubview(emptySearchImage)
-//        let emptySearchImage = UIImageView()
         emptySearchImage.image = UIImage(named: "emptySearch")
         emptySearchImage.contentMode = .scaleToFill
         emptySearchImage.translatesAutoresizingMaskIntoConstraints = false
@@ -31,7 +30,6 @@ final class EmptySearchPlaceholderView: UIView {
     
     private func configureTextLabel() {
         addSubview(textLabel)
-//       let textLabel = UILabel()
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         textLabel.text = NSLocalizedString("emptySearch.text", comment: "")
         textLabel.numberOfLines = 0
@@ -50,15 +48,5 @@ final class EmptySearchPlaceholderView: UIView {
         configureEmptySearchImage()
         configureTextLabel()
         translatesAutoresizingMaskIntoConstraints = false
-        
-
-//        NSLayoutConstraint.activate([
-//            textLabel.topAnchor.constraint(equalTo: emptySearchImage.bottomAnchor, constant: 8),
-//            textLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            textLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-//
-//            emptySearchImage.centerYAnchor.constraint(equalTo: centerYAnchor),
-//            emptySearchImage.centerXAnchor.constraint(equalTo: centerXAnchor)
-//        ])
     }
 }

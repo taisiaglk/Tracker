@@ -79,7 +79,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         view.addSubview(addButton)
         addButton.translatesAutoresizingMaskIntoConstraints = false
         let image = UIImage(named: "AddTracker")?.withRenderingMode(.alwaysTemplate)
-            addButton.setImage(image, for: .normal)
+        addButton.setImage(image, for: .normal)
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         addButton.tintColor = .black_color
         NSLayoutConstraint.activate([
@@ -229,7 +229,10 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         }
         
         completedTrackers = records.flatMap { $0 }
-        filteredCategories = categories
+        //        filteredCategories = categories
+        filteredCategories = categories.filter { category in
+            !category.trackers.isEmpty
+        }
     }
     
     @objc private func addButtonTapped() {
@@ -244,6 +247,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         isEnableToAdd = currentDate <= Date()
         collectionView.reloadData()
         updateVisibility()
+        reloadFilteredCategories(text: searchField.text, date: currentDate)
     }
     
     @objc private func didTapFilterButton() {
@@ -292,26 +296,36 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         let calendar = Calendar.current
         let filteredWeekDay = calendar.component(.weekday, from: date)
         let filterText = (text ?? "").lowercased()
+        currentDate = datePicker.date
+        
+        print("Categories count: \(categories.count)")
         
         switch selectedFilter {
         case .all:
             filteredCategories = categories.compactMap { category in
-                let trackers = category.trackers.filter { tracker in
+                // Фильтруем трекеры в категории
+                let filteredTrackers = category.trackers.filter { tracker in
+                    // Проверка условия текста
                     let textCondition = filterText.isEmpty || tracker.name.lowercased().contains(filterText)
                     
-                    let dateCondition = tracker.schedule!.contains(where: { weekDay in
-                        weekDay.rawValue == filteredWeekDay
-                    }) == true || tracker.schedule!.isEmpty
+                    // Проверка условия даты
+                    let dateCondition: Bool
+                    if let schedule = tracker.schedule {
+                        dateCondition = schedule.contains { $0.rawValue == filteredWeekDay } || schedule.isEmpty
+                    } else {
+                        dateCondition = false
+                    }
                     
+                    // Возвращаем трекер, если оба условия выполнены
                     return textCondition && dateCondition
                 }
                 
-                if trackers.isEmpty {
-                    return nil
-                }
-                
-                return TrackerCategory(title: category.title, trackers: trackers)
+                // Возвращаем новую категорию с отфильтрованными трекерами или nil, если трекеров нет
+                print("hui \(filteredTrackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: filteredTrackers))")
+                return filteredTrackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: filteredTrackers)
             }
+            print("Filtered categories count: \(filteredCategories.count)") // Логирование количества отфильтрованных категорий
+            
             
         case .today:
             filteredCategories = categories.compactMap { category in
@@ -336,59 +350,43 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
             filteredCategories = categories.compactMap { category in
                 let trackers = category.trackers.filter { tracker in
                     let textCondition = filterText.isEmpty || tracker.name.lowercased().contains(filterText)
-                    
                     let dateCondition = tracker.schedule!.contains(where: { weekDay in
                         weekDay.rawValue == filteredWeekDay
-                    }) == true || tracker.schedule!.isEmpty
+                    }) || tracker.schedule!.isEmpty
+                    let incompleteCondition = completedTrackers.contains { record in
+                        record.idRecord == tracker.id &&
+                        Calendar.current.isDate(record.date, inSameDayAs: currentDate)
+                    }
                     
-                    let completedCondition = try? trackerRecordStore
-                        .recordsFetch(for: tracker)
-                        .contains(where: { record in
-                            record.idRecord == tracker.id &&
-                            Calendar.current.isDate(record.date, inSameDayAs: currentDate)
-                        })
-                    
-                    return textCondition && dateCondition && (completedCondition ?? false)
+                    return textCondition && dateCondition && (incompleteCondition ?? false)
                 }
                 
-                if trackers.isEmpty {
-                    return nil
-                }
-                
-                return TrackerCategory(title: category.title, trackers: trackers)
+                return trackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: trackers)
             }
             
         case .uncompleted:
             filteredCategories = categories.compactMap { category in
                 let trackers = category.trackers.filter { tracker in
                     let textCondition = filterText.isEmpty || tracker.name.lowercased().contains(filterText)
-                    
                     let dateCondition = tracker.schedule!.contains(where: { weekDay in
                         weekDay.rawValue == filteredWeekDay
-                    }) == true || tracker.schedule!.isEmpty
+                    }) || tracker.schedule!.isEmpty
+                    let incompleteCondition = !completedTrackers.contains { record in
+                        record.idRecord == tracker.id &&
+                        Calendar.current.isDate(record.date, inSameDayAs: currentDate)
+                    }
                     
-                    let completedCondition = try? !trackerRecordStore
-                        .recordsFetch(for: tracker)
-                        .contains(where: { record in
-                            record.idRecord == tracker.id &&
-                            Calendar.current.isDate(record.date, inSameDayAs: currentDate)
-                        })
-                    
-                    return textCondition && dateCondition && (completedCondition ?? false)
+                    return textCondition && dateCondition && (incompleteCondition ?? false)
                 }
                 
-                if trackers.isEmpty {
-                    return nil
-                }
-                
-                return TrackerCategory(title: category.title, trackers: trackers)
+                return trackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: trackers)
             }
             
         default: break
         }
         
         collectionView.reloadData()
-        reloadPlaceholder()
+        updateVisibility()
     }
     private let placeholderView = PlaceholderView()
     private let emptySearchPlaceholderView = EmptySearchPlaceholderView()
@@ -474,10 +472,10 @@ extension TrackersViewController {
     private func deleteTrackerInCategory(tracker: Tracker) throws {
         do {
             
-//            try trackerRecordStore.deleteAllRecordForID(for: tracker.id)
+            //            try trackerRecordStore.deleteAllRecordForID(for: tracker.id)
             trackerStore.deleteTrackers(tracker: tracker)
             try fetchCategories()
-//            reloadData()
+            //            reloadData()
             reloadFilteredCategories(text: searchField.text, date: currentDate)
             updateVisibility()
         } catch {
@@ -486,20 +484,6 @@ extension TrackersViewController {
     }
     
     private func fetchCategories() throws {
-//        do {
-//            do {
-//                categories = try trackerCategoryStore.getCategories()
-//            } catch {
-//                assertionFailure("Failed to get categories with \(error)")
-//            }
-////            let coreDataCategories = try trackerCategoryStore.fetchAllCategories()
-////            categories = try coreDataCategories.compactMap { coreDataCategory in
-////                return try trackerCategoryStore.convertToTrackerCategory(from: coreDataCategory)
-////            }
-////            reloadPinTrackers()
-//        } catch {
-//            print("fetchCategories error")
-//        }
         do {
             categories = try trackerCategoryStore.getCategories()
         } catch {
@@ -510,14 +494,14 @@ extension TrackersViewController {
 
 extension TrackersViewController: TrackerCellDelegate {
     func updateTrackerPinAction(tracker: Tracker) {
-//        try? self.pinTracker(tracker)
-//        private func editingTrackers(tracker: Tracker) {
-            
-//        }
+        //        try? self.pinTracker(tracker)
+        //        private func editingTrackers(tracker: Tracker) {
+        
+        //        }
     }
     
     func editTrackerAction(tracker: Tracker) {
-//        self.editingTrackers(tracker: tracker)er(rootViewController: configureTrackerViewController)
+        //        self.editingTrackers(tracker: tracker)er(rootViewController: configureTrackerViewController)
     }
     
     func deleteTrackerAction(tracker: Tracker) {
@@ -560,18 +544,18 @@ extension TrackersViewController: TrackerCellDelegate {
 
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return currentlyTrackers.count
+        return filteredCategories.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return currentlyTrackers[section].trackers.count
+        return filteredCategories[section].trackers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCell.identifier, for: indexPath) as? TrackerCell else {
             return UICollectionViewCell()
         }
-        let tracker = currentlyTrackers[indexPath.section].trackers[indexPath.row]
+        let tracker = filteredCategories[indexPath.section].trackers[indexPath.row]
         let daysCount = completedTrackers.filter { $0.idRecord == tracker.id }.count
         let active = completedTrackers.contains { Calendar.current.isDate($0.date, inSameDayAs: currentDate)/* $0.date == currentDate*/ && $0.idRecord == tracker.id }
         cell.configure(with: tracker, days: daysCount, active: active)
@@ -601,7 +585,7 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         guard
             kind == UICollectionView.elementKindSectionHeader,
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath) as? TrackerHeaderSectionView else { return UICollectionReusableView() }
-        let label = currentlyTrackers[indexPath.section].title
+        let label = filteredCategories[indexPath.section].title
         view.putText(label)
         return view
     }
@@ -638,6 +622,13 @@ extension TrackersViewController: FiltersViewControllerDelegate {
     }
 }
 
+extension TrackersViewController {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // Фильтрация трекеров по тексту
+        reloadFilteredCategories(text: searchText, date: currentDate)
+    }
+}
+
 struct GeometricParams {
     let cellCount: Int
     let leftInset: CGFloat
@@ -653,5 +644,3 @@ struct GeometricParams {
         self.paddingWidth = leftInset + rightInset + CGFloat(cellCount - 1) * cellSpacing
     }
 }
-
-
