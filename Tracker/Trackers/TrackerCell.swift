@@ -23,6 +23,7 @@ final class TrackerCell: UICollectionViewCell {
     let trackerLabel = UILabel()
     let daysLabel = UILabel()
     let execButton = UIButton()
+    let pinnedImage = UIImageView()
     
     private func configureCardView() {
         contentView.addSubview(cardView)
@@ -100,6 +101,21 @@ final class TrackerCell: UICollectionViewCell {
         ])
     }
     
+    private func configurePinnedImage() {
+        contentView.addSubview(pinnedImage)
+        
+        pinnedImage.image = UIImage(named: "Pin")
+        pinnedImage.isHidden = true
+        pinnedImage.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            pinnedImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -4),
+            pinnedImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            pinnedImage.widthAnchor.constraint(equalToConstant: 24),
+            pinnedImage.heightAnchor.constraint(equalToConstant: 24)
+        ])
+    }
+    
     private func configureContextMenu() {
         let contextMenu = UIContextMenuInteraction(delegate: self)
         cardView.addInteraction(contextMenu)
@@ -112,6 +128,8 @@ final class TrackerCell: UICollectionViewCell {
         configureTrackerLabel()
         configureEmojiLabel()
         configureEexecButton()
+        configurePinnedImage()
+        
     }
     
     weak var delegate: TrackerCellDelegate?
@@ -152,6 +170,7 @@ final class TrackerCell: UICollectionViewCell {
         execButton.backgroundColor = tracker.color
         changeImageButton(active: active)
         configureContextMenu()
+        pinnedImage.isHidden = !tracker.isPinned
     }
     
     func changeImageButton(active: Bool) {

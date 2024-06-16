@@ -75,7 +75,7 @@ final class TrackerTypeViewController: UIViewController {
     }
     
     enum TrackerVersion {
-        case habit, event
+        case habit, event/*, edit*/
     }
     
     @objc func didTapHabitButton() {

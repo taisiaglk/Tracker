@@ -9,6 +9,14 @@ import Foundation
 import UIKit
 
 class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegate, UICollectionViewDelegate, UISearchBarDelegate, CreatingTrackerViewControllerDelegate{
+    func updateTracker(tracker: Tracker, to category: TrackerCategory) {
+        print("Updated")
+        dismiss(animated: true)
+        try? trackerStore.updateTracker(tracker, to: category)
+        try? fetchCategories()
+        reloadFilteredCategories(text: searchField.text, date: currentDate)
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -258,9 +266,6 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         configureFilterButton()
         configureEmptySearchImage()
         configureTextLabel()
-        
-        emptySearchPlaceholderView.configureEmptySearchPlaceholder()
-        emptySearchPlaceholderView.isHidden = true
         
         updateVisibility()
     }
@@ -554,22 +559,87 @@ extension TrackersViewController {
     private func fetchCategories() throws {
         do {
             categories = try trackerCategoryStore.getCategories()
+            reloadPinTrackers()
         } catch {
             assertionFailure("Failed to get categories with \(error)")
         }
+    }
+    
+    func trackerDidSaved() {
+        print("save")
+    }
+//    
+//    func updateTracker(tracker: Tracker, to category: String) {
+//        print("Updated")
+//        do {
+//            if let existingCategory = categories.first(where: { $0.title == category }) {
+//                try? trackerStore.updateTracker(tracker, to: existingCategory)
+//                try? fetchCategories()
+//                reloadFilteredCategories(text: searchField.text, date: currentDate)
+//            } else {
+//                let newCategory = TrackerCategory(title: category, trackers: [tracker])
+//                try trackerStore.addTracker(tracker, toCategory: newCategory)
+//                try? trackerStore.updateTracker(tracker, to: newCategory)
+//                try? fetchCategories()
+//                reloadFilteredCategories(text: searchField.text, date: currentDate)
+//            }
+//            
+//        } catch {
+//            print("Ошибка сохранения трекера: \(error)")
+//        }
+//        
+//    }
+    
+    func findCategoryByTracker(tracker: Tracker) throws -> TrackerCategory? {
+         try trackerCategoryStore.getCategories()
+            .first(where: {category in
+                category.trackers.contains(where: { $0.id == tracker.id})
+            })
+    }
+    
+    private func pinTracker(_ tracker: Tracker) throws {
+        do {
+            try trackerStore.pinTrackerCoreData(tracker)
+            try fetchCategories()
+            reloadFilteredCategories(text: searchField.text, date: currentDate)
+        } catch {
+            print("Pin tracker failed")
+        }
+    }
+    
+    private func reloadPinTrackers() {
+        categories = []
+        var pinnedTrackers: [Tracker] = []
+        
+        for category in trackerCategoryStore.trackerCategory {
+            let trackers = category.trackers
+            let pinnedTrackersForCategory = trackers.filter { $0.isPinned }
+            let unpinnedTrackers = trackers.filter { !$0.isPinned }
+            pinnedTrackers.append(contentsOf: pinnedTrackersForCategory)
+            
+            if !unpinnedTrackers.isEmpty {
+                let unpinnedCategory = TrackerCategory(title: category.title, trackers: unpinnedTrackers)
+                categories.append(unpinnedCategory)
+            }
+        }
+        
+        if !pinnedTrackers.isEmpty {
+            let pinnedCategory = TrackerCategory(
+                title: NSLocalizedString("pinnedTrackers.title", comment: ""),
+                trackers: pinnedTrackers)
+            categories.insert(pinnedCategory, at: 0)
+        }
+        
     }
 }
 
 extension TrackersViewController: TrackerCellDelegate {
     func updateTrackerPinAction(tracker: Tracker) {
-        //        try? self.pinTracker(tracker)
-        //        private func editingTrackers(tracker: Tracker) {
-        
-        //        }
+        try? self.pinTracker(tracker)
     }
     
     func editTrackerAction(tracker: Tracker) {
-        //        self.editingTrackers(tracker: tracker)er(rootViewController: configureTrackerViewController)
+//        self.editingTrackers(tracker: tracker)
     }
     
     func deleteTrackerAction(tracker: Tracker) {
@@ -712,3 +782,5 @@ struct GeometricParams {
         self.paddingWidth = leftInset + rightInset + CGFloat(cellCount - 1) * cellSpacing
     }
 }
+
+

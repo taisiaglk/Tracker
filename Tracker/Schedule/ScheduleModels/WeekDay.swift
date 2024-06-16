@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 enum WeekDay: Int, Codable, CaseIterable {
     case monday = 0
     case tuesday = 1
