@@ -17,7 +17,6 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         reloadFilteredCategories(text: searchField.text, date: currentDate)
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white_color
@@ -192,9 +191,6 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         ])
     }
     
-//    let emptySearchImage = UIImageView()
-//    let textLabel = UILabel()
-    
     private func configureEmptySearchImage() {
         view.addSubview(emptySearchImage)
         emptySearchImage.image = UIImage(named: "emptySearch")
@@ -224,36 +220,6 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
             textLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
-    
-//    private func configureEmptySearchImage() {
-//        addSubview(emptySearchImage)
-//        emptySearchImage.image = UIImage(named: "emptySearch")
-//        emptySearchImage.contentMode = .scaleToFill
-//        emptySearchImage.translatesAutoresizingMaskIntoConstraints = false
-//        emptySearchImage.heightAnchor.constraint(equalToConstant: 80).isActive = true
-//        emptySearchImage.widthAnchor.constraint(equalToConstant: 80).isActive = true
-//        
-//        NSLayoutConstraint.activate([
-//            textLabel.topAnchor.constraint(equalTo: emptySearchImage.bottomAnchor, constant: 8),
-//            textLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-//            textLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
-//        ])
-//    }
-//    
-//    private func configureTextLabel() {
-//        addSubview(textLabel)
-//        textLabel.translatesAutoresizingMaskIntoConstraints = false
-//        textLabel.text = NSLocalizedString("emptySearch.text", comment: "")
-//        textLabel.numberOfLines = 0
-//        textLabel.textColor = .black_color
-//        textLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-//        textLabel.textAlignment = NSTextAlignment.center
-//        
-//        NSLayoutConstraint.activate([
-//            emptySearchImage.centerYAnchor.constraint(equalTo: centerYAnchor),
-//            emptySearchImage.centerXAnchor.constraint(equalTo: centerXAnchor)
-//        ])
-//    }
     
     private func addToScreen() {
         configureTrackersLabel()
@@ -318,7 +284,6 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         }
         
         completedTrackers = records.flatMap { $0 }
-        //        filteredCategories = categories
         reloadPinTrackers()
         filteredCategories = categories.filter { category in
             !category.trackers.isEmpty
@@ -394,12 +359,9 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         switch selectedFilter {
         case .all:
             filteredCategories = categories.compactMap { category in
-                // Фильтруем трекеры в категории
                 let filteredTrackers = category.trackers.filter { tracker in
-                    // Проверка условия текста
                     let textCondition = filterText.isEmpty || tracker.name.lowercased().contains(filterText)
                     
-                    // Проверка условия даты
                     let dateCondition: Bool
                     if let schedule = tracker.schedule {
                         dateCondition = schedule.contains { $0.rawValue == filteredWeekDay } || schedule.isEmpty
@@ -407,11 +369,9 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
                         dateCondition = false
                     }
                     
-                    // Возвращаем трекер, если оба условия выполнены
                     return textCondition && dateCondition
                 }
                 
-                // Возвращаем новую категорию с отфильтрованными трекерами или nil, если трекеров нет
                 print("hui \(filteredTrackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: filteredTrackers))")
                 return filteredTrackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: filteredTrackers)
             }
@@ -546,11 +506,8 @@ extension TrackersViewController {
     
     private func deleteTrackerInCategory(tracker: Tracker) throws {
         do {
-            
-            //            try trackerRecordStore.deleteAllRecordForID(for: tracker.id)
             trackerStore.deleteTrackers(tracker: tracker)
             try fetchCategories()
-            //            reloadData()
             reloadFilteredCategories(text: searchField.text, date: currentDate)
             updateVisibility()
         } catch {
