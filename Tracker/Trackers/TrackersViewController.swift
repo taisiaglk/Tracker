@@ -39,6 +39,9 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     
     let filterButton = UIButton(type: .system)
     
+    let emptySearchImage = UIImageView()
+    let textLabel = UILabel()
+    
     private var currentDate = Date()
     private var isEnableToAdd = true
     
@@ -181,6 +184,69 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         ])
     }
     
+//    let emptySearchImage = UIImageView()
+//    let textLabel = UILabel()
+    
+    private func configureEmptySearchImage() {
+        view.addSubview(emptySearchImage)
+        emptySearchImage.image = UIImage(named: "emptySearch")
+        emptySearchImage.contentMode = .scaleToFill
+        emptySearchImage.translatesAutoresizingMaskIntoConstraints = false
+        emptySearchImage.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        emptySearchImage.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        
+        NSLayoutConstraint.activate([
+            emptySearchImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptySearchImage.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+    
+    private func configureTextLabel() {
+        view.addSubview(textLabel)
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
+        textLabel.text = NSLocalizedString("emptySearch.text", comment: "")
+        textLabel.numberOfLines = 0
+        textLabel.textColor = .black_color
+        textLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        textLabel.textAlignment = NSTextAlignment.center
+        
+        NSLayoutConstraint.activate([
+            textLabel.topAnchor.constraint(equalTo: emptySearchImage.bottomAnchor, constant: 8),
+            textLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            textLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+    }
+    
+//    private func configureEmptySearchImage() {
+//        addSubview(emptySearchImage)
+//        emptySearchImage.image = UIImage(named: "emptySearch")
+//        emptySearchImage.contentMode = .scaleToFill
+//        emptySearchImage.translatesAutoresizingMaskIntoConstraints = false
+//        emptySearchImage.heightAnchor.constraint(equalToConstant: 80).isActive = true
+//        emptySearchImage.widthAnchor.constraint(equalToConstant: 80).isActive = true
+//        
+//        NSLayoutConstraint.activate([
+//            textLabel.topAnchor.constraint(equalTo: emptySearchImage.bottomAnchor, constant: 8),
+//            textLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+//            textLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
+//        ])
+//    }
+//    
+//    private func configureTextLabel() {
+//        addSubview(textLabel)
+//        textLabel.translatesAutoresizingMaskIntoConstraints = false
+//        textLabel.text = NSLocalizedString("emptySearch.text", comment: "")
+//        textLabel.numberOfLines = 0
+//        textLabel.textColor = .black_color
+//        textLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+//        textLabel.textAlignment = NSTextAlignment.center
+//        
+//        NSLayoutConstraint.activate([
+//            emptySearchImage.centerYAnchor.constraint(equalTo: centerYAnchor),
+//            emptySearchImage.centerXAnchor.constraint(equalTo: centerXAnchor)
+//        ])
+//    }
+    
     private func addToScreen() {
         configureTrackersLabel()
         configureAddButton()
@@ -190,6 +256,12 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         configureStarImage()
         configureLabel()
         configureFilterButton()
+        configureEmptySearchImage()
+        configureTextLabel()
+        
+        emptySearchPlaceholderView.configureEmptySearchPlaceholder()
+        emptySearchPlaceholderView.isHidden = true
+        
         updateVisibility()
     }
     
@@ -198,10 +270,22 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
             starImage.isHidden = false
             label.isHidden = false
             collectionView.isHidden = true
+            textLabel.isHidden = true
+            emptySearchImage.isHidden = true
         } else {
-            starImage.isHidden = true
-            label.isHidden = true
-            collectionView.isHidden = false
+            if filteredCategories.isEmpty {
+                textLabel.isHidden = false
+                emptySearchImage.isHidden = false
+                starImage.isHidden = true
+                label.isHidden = true
+                collectionView.isHidden = true
+            } else {
+                starImage.isHidden = true
+                label.isHidden = true
+                collectionView.isHidden = false
+                textLabel.isHidden = true
+                emptySearchImage.isHidden = true
+            }
         }
     }
     
@@ -387,22 +471,6 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         
         collectionView.reloadData()
         updateVisibility()
-    }
-    private let placeholderView = PlaceholderView()
-    private let emptySearchPlaceholderView = EmptySearchPlaceholderView()
-    
-    private func reloadPlaceholder() {
-        let isPlaceholderVisible = filteredCategories.isEmpty && (searchField.text ?? "").isEmpty &&
-        selectedFilter == .all
-        
-        placeholderView.isHidden = !isPlaceholderVisible
-        filterButton.isHidden = isPlaceholderVisible
-        
-        let isEmptySearchVisible = filteredCategories.isEmpty &&
-        (!(searchField.text ?? "").isEmpty ||
-         selectedFilter != .all)
-        
-        emptySearchPlaceholderView.isHidden = !isEmptySearchVisible
     }
     
     func didTapCancelButton() {

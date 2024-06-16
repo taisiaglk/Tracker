@@ -43,8 +43,6 @@
 		006DE91B2C1CA7C70063265D /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006DE91A2C1CA7C70063265D /* FiltersViewController.swift */; };
 		006DE91D2C1CA7F20063265D /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006DE91C2C1CA7F20063265D /* Filter.swift */; };
 		006DE9202C1CAE590063265D /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006DE91F2C1CAE590063265D /* AnalyticsService.swift */; };
-		006DE9222C1CAFDA0063265D /* PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006DE9212C1CAFDA0063265D /* PlaceholderView.swift */; };
-		006DE9242C1CB08A0063265D /* EmptySearchPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006DE9232C1CB08A0063265D /* EmptySearchPlaceholderView.swift */; };
 		006DE9262C1DBA8A0063265D /* StatisticsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006DE9252C1DBA8A0063265D /* StatisticsCell.swift */; };
 		006DE92A2C1DBC4C0063265D /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006DE9292C1DBC4C0063265D /* Date+Extension.swift */; };
 		00BB57BC2BEB8C3100059BB5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BB57BB2BEB8C3100059BB5 /* AppDelegate.swift */; };
@@ -105,8 +103,6 @@
 		006DE91A2C1CA7C70063265D /* FiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
 		006DE91C2C1CA7F20063265D /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
 		006DE91F2C1CAE590063265D /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
-		006DE9212C1CAFDA0063265D /* PlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderView.swift; sourceTree = "<group>"; };
-		006DE9232C1CB08A0063265D /* EmptySearchPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptySearchPlaceholderView.swift; sourceTree = "<group>"; };
 		006DE9252C1DBA8A0063265D /* StatisticsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsCell.swift; sourceTree = "<group>"; };
 		006DE9292C1DBC4C0063265D /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		00BB57B82BEB8C3100059BB5 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -212,8 +208,6 @@
 			isa = PBXGroup;
 			children = (
 				0000C3582BF24A85007F8B8D /* CommonCellView.swift */,
-				006DE9212C1CAFDA0063265D /* PlaceholderView.swift */,
-				006DE9232C1CB08A0063265D /* EmptySearchPlaceholderView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -567,9 +561,7 @@
 				0000C3EE2C078FC5007F8B8D /* TrackerRecordStore.swift in Sources */,
 				0000C34A2BF0114B007F8B8D /* WeekDay.swift in Sources */,
 				0000C34E2BF07F88007F8B8D /* TrackerTypeViewController.swift in Sources */,
-				006DE9242C1CB08A0063265D /* EmptySearchPlaceholderView.swift in Sources */,
 				0000C3522BF23F85007F8B8D /* ScheduleViewController.swift in Sources */,
-				006DE9222C1CAFDA0063265D /* PlaceholderView.swift in Sources */,
 				0000C3442BF00FE2007F8B8D /* Tracker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
