@@ -8,14 +8,7 @@
 import Foundation
 import UIKit
 
-class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegate, UICollectionViewDelegate, UISearchBarDelegate, CreatingTrackerViewControllerDelegate{
-    func updateTracker(tracker: Tracker, to category: TrackerCategory) {
-        print("Updated")
-        dismiss(animated: true)
-        try? trackerStore.updateTracker(tracker, to: category)
-        try? fetchCategories()
-        reloadFilteredCategories(text: searchField.text, date: currentDate)
-    }
+class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegate, UICollectionViewDelegate, UISearchBarDelegate, CreatingTrackerViewControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -237,6 +230,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     }
     
     private func updateVisibility() {
+        
         if currentlyTrackers.isEmpty {
             starImage.isHidden = false
             label.isHidden = false
@@ -285,10 +279,10 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         
         completedTrackers = records.flatMap { $0 }
         reloadPinTrackers()
-        filteredCategories = categories.filter { category in
-            !category.trackers.isEmpty
-        }
-        
+//        filteredCategories = categories.filter { category in
+//            !category.trackers.isEmpty
+//        }
+        reloadFilteredCategories(text: searchField.text, date: currentDate)
     }
     
     @objc private func addButtonTapped() {
@@ -350,7 +344,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
     
     private func reloadFilteredCategories(text: String?, date: Date) {
         let calendar = Calendar.current
-        let filteredWeekDay = calendar.component(.weekday, from: date)
+        let filteredWeekDay = ((calendar.component(.weekday, from: date) - 2) + 7) % 7
         let filterText = (text ?? "").lowercased()
         currentDate = datePicker.date
         
@@ -371,11 +365,9 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
                     
                     return textCondition && dateCondition
                 }
-                
-                print("hui \(filteredTrackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: filteredTrackers))")
                 return filteredTrackers.isEmpty ? nil : TrackerCategory(title: category.title, trackers: filteredTrackers)
             }
-            print("Filtered categories count: \(filteredCategories.count)") // Логирование количества отфильтрованных категорий
+            print("Filtered categories count: \(filteredCategories.count)")
             
             
         case .today:
@@ -462,7 +454,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         dismiss(animated: true)
         
         saveTracker(tracker, toCategory: category)
-        
+//        reloadFilteredCategories()
         reloadData()
         collectionView.reloadData()
         updateVisibility()
@@ -527,27 +519,6 @@ extension TrackersViewController {
     func trackerDidSaved() {
         print("save")
     }
-//    
-//    func updateTracker(tracker: Tracker, to category: String) {
-//        print("Updated")
-//        do {
-//            if let existingCategory = categories.first(where: { $0.title == category }) {
-//                try? trackerStore.updateTracker(tracker, to: existingCategory)
-//                try? fetchCategories()
-//                reloadFilteredCategories(text: searchField.text, date: currentDate)
-//            } else {
-//                let newCategory = TrackerCategory(title: category, trackers: [tracker])
-//                try trackerStore.addTracker(tracker, toCategory: newCategory)
-//                try? trackerStore.updateTracker(tracker, to: newCategory)
-//                try? fetchCategories()
-//                reloadFilteredCategories(text: searchField.text, date: currentDate)
-//            }
-//            
-//        } catch {
-//            print("Ошибка сохранения трекера: \(error)")
-//        }
-//        
-//    }
     
     func findCategoryByTracker(tracker: Tracker) throws -> TrackerCategory? {
          try trackerCategoryStore.getCategories()
@@ -558,6 +529,7 @@ extension TrackersViewController {
     
     private func pinTracker(_ tracker: Tracker) throws {
         do {
+            reloadFilteredCategories(text: searchField.text, date: currentDate)
             try trackerStore.pinTrackerCoreData(tracker)
             try fetchCategories()
             reloadFilteredCategories(text: searchField.text, date: currentDate)
@@ -588,6 +560,33 @@ extension TrackersViewController {
                 trackers: pinnedTrackers)
             categories.insert(pinnedCategory, at: 0)
         }
+    }
+    
+//    func findCategoryByTracker(tracker: Tracker) throws -> TrackerCategory? {
+//        try trackerCategoryStore.getCategories()
+//            .first(where: {category in
+//                category.trackers.contains(where: { $0.id == tracker.id})
+//            })
+//    }
+    
+    private func editingTrackers(tracker: Tracker) {
+        let daysCount = completedTrackers.filter { $0.idRecord == tracker.id }.count
+        if let categoryName = try? findCategoryByTracker(tracker: tracker) {
+            let editTrackerViewController = EditTrackerViewController(tracker: tracker, daysCount: daysCount, category: categoryName.title)
+    //        editTrackerViewController.typeOfTracker = .edit
+            editTrackerViewController.daysCount = daysCount
+            editTrackerViewController.editTracker = tracker
+            editTrackerViewController.delegate = self
+            let navigationController = UINavigationController(rootViewController: editTrackerViewController)
+            present(navigationController, animated: true)
+        }
+//        let categoryName = findCategoryByTracker(tracker: tracker)
+//        let editTrackerViewController = EditTrackerViewController(tracker: tracker, daysCount: daysCount, category: categoryName)
+////        editTrackerViewController.typeOfTracker = .edit
+//        editTrackerViewController.daysCount = daysCount
+//        editTrackerViewController.editTracker = tracker
+//        editTrackerViewController.delegate = self
+        
         
     }
 }
@@ -598,7 +597,7 @@ extension TrackersViewController: TrackerCellDelegate {
     }
     
     func editTrackerAction(tracker: Tracker) {
-//        self.editingTrackers(tracker: tracker)
+        self.editingTrackers(tracker: tracker)
     }
     
     func deleteTrackerAction(tracker: Tracker) {
@@ -721,7 +720,6 @@ extension TrackersViewController: FiltersViewControllerDelegate {
 
 extension TrackersViewController {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // Фильтрация трекеров по тексту
         reloadFilteredCategories(text: searchText, date: currentDate)
     }
 }
@@ -742,4 +740,12 @@ struct GeometricParams {
     }
 }
 
-
+extension TrackersViewController: EditTrackerViewControllerDelegate {
+    func updateTracker(tracker: Tracker, to category: TrackerCategory) {
+        print("Updated")
+        
+        try? trackerStore.updateTracker(tracker, to: category)
+        try? fetchCategories()
+        reloadFilteredCategories(text: searchField.text, date: currentDate)
+    }
+}

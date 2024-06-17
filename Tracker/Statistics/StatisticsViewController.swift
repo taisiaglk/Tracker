@@ -112,12 +112,6 @@ final class StatisticsViewController: UIViewController {
         configureFilledStatisticsScreen()
         checkEmptyStatistics()
         updateVisibility()
-//        if completedTrackers.isEmpty {
-//            configureEmptyStatisticsScreen()
-//        } else {
-//            configureFilledStatisticsScreen()
-//            checkEmptyStatistics()
-//        }
     }
     
     private func updateVisibility() {
