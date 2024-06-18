@@ -20,10 +20,21 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         searchField.delegate = self
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        analyticsService.report(event: "open", params: ["screen": "Main"])
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        analyticsService.report(event: "close", params: ["screen" : "Main"])
+    }
+    
     var categories: [TrackerCategory] = [TrackerCategory(title: "База", trackers: [])]
     var completedTrackers: [TrackerRecord] = []
     var selectedFilter: Filter = .all
     
+    private let analyticsService = AnalyticsService.shared
     private let trackerStore: TrackerStoreProtocol = TrackerStore.shared
     private let trackerCategoryStore: TrackerCategoryStoreProtocol = TrackerCategoryStore.shared
     private let trackerRecordStore: TrackerRecordStoreProtocol = TrackerRecordStore.shared
@@ -286,6 +297,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         let createTrack = TrackerTypeViewController()
         createTrack.delegate = self
         let navigationController = UINavigationController(rootViewController: createTrack)
+        analyticsService.report(event: "click", params: ["screen" : "Main", "item" : "add_track"])
         present(navigationController, animated: true)
     }
     
@@ -301,6 +313,8 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         let filtersViewController = FiltersViewController()
         filtersViewController.delegate = self
         filtersViewController.selectedFilter = selectedFilter
+        analyticsService.report(event: "click", params: ["screen" : "Main", "item" : "filter"])
+        
         present(filtersViewController, animated: true)
     }
     
@@ -451,7 +465,7 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         dismiss(animated: true)
         
         saveTracker(tracker, toCategory: category)
-//        reloadFilteredCategories()
+        //        reloadFilteredCategories()
         reloadData()
         collectionView.reloadData()
         updateVisibility()
@@ -498,6 +512,7 @@ extension TrackersViewController {
             trackerStore.deleteTrackers(tracker: tracker)
             try fetchCategories()
             reloadFilteredCategories(text: searchField.text, date: currentDate)
+            analyticsService.report(event: "click", params: ["screen" : "Main", "item" : "delete"])
             updateVisibility()
         } catch {
             print("Delete tracker is failed")
@@ -518,7 +533,7 @@ extension TrackersViewController {
     }
     
     func findCategoryByTracker(tracker: Tracker) throws -> TrackerCategory? {
-         try trackerCategoryStore.getCategories()
+        try trackerCategoryStore.getCategories()
             .first(where: {category in
                 category.trackers.contains(where: { $0.id == tracker.id})
             })
@@ -567,6 +582,7 @@ extension TrackersViewController {
             editTrackerViewController.editTracker = tracker
             editTrackerViewController.delegate = self
             let navigationController = UINavigationController(rootViewController: editTrackerViewController)
+            analyticsService.report(event: "click", params: ["screen" : "Main", "item" : "edit"])
             present(navigationController, animated: true)
         }
     }
@@ -594,6 +610,7 @@ extension TrackersViewController: TrackerCellDelegate {
                     completedTrackers.remove(at: index)
                     cell.changeImageButton(active: false)
                     cell.addOrSubtrack(value: false)
+                    
                 } catch {
                     print("Remove task failed: \(error)")
                 }
@@ -601,11 +618,11 @@ extension TrackersViewController: TrackerCellDelegate {
             } else {
                 do {
                     try trackerRecordStore.addRecord(with: tracker.id, by: currentDate)
-                    
                     let trackerRecord = TrackerRecord(idRecord: tracker.id, date: currentDate)
                     completedTrackers.append(trackerRecord)
                     cell.changeImageButton(active: true)
                     cell.addOrSubtrack(value: true)
+                    analyticsService.report(event: "click", params: ["screen" : "Main", "item" : "track"])
                 } catch {
                     print("Complete task failed")
                 }
@@ -616,6 +633,37 @@ extension TrackersViewController: TrackerCellDelegate {
             present(alert, animated: true, completion: nil)
         }
         updateVisibility()
+    }
+}
+
+extension TrackersViewController: FiltersViewControllerDelegate {
+    func filterSelected(filter: Filter) {
+        selectedFilter = filter
+        searchField.text = ""
+        
+        switch filter {
+        case .all:
+            filterButton.setTitleColor(.white_color, for: .normal)
+            
+        case .today:
+            datePicker.setDate(Date(), animated: false)
+            currentDate = datePicker.date
+            filterButton.setTitleColor(.white_color, for: .normal)
+            
+        case .completed:
+            filterButton.setTitleColor(.white_color, for: .normal)
+            
+        case .uncompleted:
+            filterButton.setTitleColor(.white_color, for: .normal)
+        }
+        
+        reloadFilteredCategories(text: searchField.text, date: currentDate)
+    }
+}
+
+extension TrackersViewController {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        reloadFilteredCategories(text: searchText, date: currentDate)
     }
 }
 
@@ -674,34 +722,14 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension TrackersViewController: FiltersViewControllerDelegate {
-    func filterSelected(filter: Filter) {
-        selectedFilter = filter
-        searchField.text = ""
-        
-        switch filter {
-        case .all:
-            filterButton.setTitleColor(.white_color, for: .normal)
-            
-        case .today:
-            datePicker.setDate(Date(), animated: false)
-            currentDate = datePicker.date
-            filterButton.setTitleColor(.white_color, for: .normal)
-            
-        case .completed:
-            filterButton.setTitleColor(.white_color, for: .normal)
-            
-        case .uncompleted:
-            filterButton.setTitleColor(.white_color, for: .normal)
-        }
-        
+extension TrackersViewController: EditTrackerViewControllerDelegate {
+    func updateTracker(tracker: Tracker, to category: TrackerCategory) {
+        print("Updated")
+        dismiss(animated: true)
+        try? trackerStore.updateTracker(tracker, to: category)
+        try? fetchCategories()
+        reloadData()
         reloadFilteredCategories(text: searchField.text, date: currentDate)
-    }
-}
-
-extension TrackersViewController {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        reloadFilteredCategories(text: searchText, date: currentDate)
     }
 }
 
@@ -718,17 +746,5 @@ struct GeometricParams {
         self.rightInset = rightInset
         self.cellSpacing = cellSpacing
         self.paddingWidth = leftInset + rightInset + CGFloat(cellCount - 1) * cellSpacing
-    }
-}
-
-extension TrackersViewController: EditTrackerViewControllerDelegate {
-    func updateTracker(tracker: Tracker, to category: TrackerCategory) {
-        print("Updated")
-//        present(navigationController, animated: true)
-        dismiss(animated: true)
-        try? trackerStore.updateTracker(tracker, to: category)
-        try? fetchCategories()
-        reloadData()
-        reloadFilteredCategories(text: searchField.text, date: currentDate)
     }
 }
