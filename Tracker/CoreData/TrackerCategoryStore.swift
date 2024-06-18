@@ -27,6 +27,7 @@ protocol TrackerCategoryStoreDelegate: AnyObject {
 }
 
 protocol TrackerCategoryStoreProtocol {
+    var trackerCategory: [TrackerCategory] { get }
     func setDelegate(_ delegate: TrackerCategoryStoreDelegate)
     func getCategories() throws -> [TrackerCategory]
     func fetchCategoryCoreData(for category: TrackerCategory) throws -> TrackerCategoryCoreData
@@ -179,6 +180,15 @@ extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
 }
 
 extension TrackerCategoryStore: TrackerCategoryStoreProtocol {
+    
+    var trackerCategory: [TrackerCategory] {
+        guard
+            let objects = self.fetchedResultsController.fetchedObjects,
+            let trackerCategory = try? objects.map({ try self.convertToTrackerCategory(from: $0) })
+        else { return [] }
+        
+        return trackerCategory
+    }
     
     func setDelegate(_ delegate: TrackerCategoryStoreDelegate) {
         self.delegate = delegate

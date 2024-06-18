@@ -32,7 +32,7 @@ final class CategoryViewController: UIViewController {
         view.backgroundColor = .white_color
         
         navigationItem.hidesBackButton = true
-        navigationItem.title = "Категория"
+        navigationItem.title = NSLocalizedString("category.title", comment: "")
         
         configureLabel()
         configureEmptyScreenImage()
@@ -81,7 +81,7 @@ final class CategoryViewController: UIViewController {
     private func configureLabel() {
         view.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Привычки и события можно \nобъединить по смыслу"
+        label.text = NSLocalizedString("emptyStateCategory.text", comment: "")
         label.numberOfLines = 0
         label.textColor = .black_color
         label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
@@ -94,8 +94,8 @@ final class CategoryViewController: UIViewController {
         addButton.backgroundColor = .black_color
         addButton.layer.cornerRadius = 16
         addButton.layer.masksToBounds = true
-        addButton.setTitle("Добавить категорию", for: .normal)
-        addButton.setTitleColor(.white, for: .normal)
+        addButton.setTitle(NSLocalizedString("addCategoryButton.text", comment: ""), for: .normal)
+        addButton.setTitleColor(.white_color, for: .normal)
         addButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         addButton.addTarget(self, action: #selector(pushAddCategoryButton), for: .touchUpInside)
     }

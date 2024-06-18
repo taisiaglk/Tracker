@@ -26,7 +26,8 @@ extension UIColor {
     static var colorr17: UIColor { UIColor(named: "color17") ?? UIColor.purple }
     static var colorr18: UIColor { UIColor(named: "color18") ?? UIColor.green }
     static var black_forAll: UIColor { UIColor(named: "black_forAll") ?? UIColor.black }
-    
+    static var date_color: UIColor { UIColor(named: "date_color") ?? UIColor.black }
+    static var gray_separator: UIColor { UIColor(named: "gray_separator") ?? UIColor.black }
 
     func hexString() -> String {
         let components = self.cgColor.components

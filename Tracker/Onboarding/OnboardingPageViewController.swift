@@ -72,7 +72,7 @@ class OnboardingPageViewController: UIViewController {
         doneButton.backgroundColor = .black_forAll
         doneButton.layer.cornerRadius = 16
         doneButton.layer.masksToBounds = true
-        doneButton.setTitle("Вот это технологии!", for: .normal)
+        doneButton.setTitle(NSLocalizedString("onboardingDoneButton.text", comment: ""), for: .normal)
         doneButton.setTitleColor(.white, for: .normal)
         doneButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)

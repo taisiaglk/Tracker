@@ -1,0 +1,77 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Тася Галкина on 14.06.2024.
+  
+*/
+
+"onboardingBlueLabel.title" = "Отслеживайте только то, что хотите";
+"onboardingRedLabel.title" = "даже если это\nне литры воды и йога";
+"onboardingDoneButton.text" = "Вот это технологии!";
+
+"tabBarTrackers.title" = "Трекеры";
+"tabBarStatistics.title" = "Статистика";
+
+"trackers.title" = "Трекеры";
+"searchTextField.placeholder" = "Поиск";
+"emptyState.text" = "Что будем отслеживать?";
+"unpinTracker.text" = "Открепить";
+"pinTracker.text" = "Закрепить";
+"cancelButton.text" = "Отменить";
+"pinnedTrackers.title" = "Закрепленные";
+"edit.text" = "Редактировать";
+"delete.text" = "Удалить";
+"filterButton.text" = "Фильтры";
+"showDeleteAlert.text" = "Уверены, что хотите удалить трекер?";
+
+
+"addCategoryButton.text" = "Добавить категорию";
+"emptyStateCategory.text" = "Привычки и события можно\nобъединить по смыслу";
+"category.title" = "Категория";
+
+"newCategoryTextField.placeholder" = "Введите название категории";
+"doneButton.text" = "Готово";
+"newCategory.title" = "Новая категория";
+
+"schedule.title" = "Расписание";
+
+"Monday" = "Понедельник";
+"Tuesday" = "Вторник";
+"Wednesday" = "Среда";
+"Thursday" = "Четверг";
+"Friday" = "Пятница";
+"Saturday" = "Суббота";
+"Sunday" = "Воскресенье";
+
+"Mon" = "Пн";
+"Tue" = "Вт";
+"Wed" = "Ср";
+"Thu" = "Чт";
+"Fri" = "Пт";
+"Sat" = "Сб";
+"Sun" = "Вс";
+
+"addTracker.title" = "Создание трека";
+"habitButton.text" = "Привычка";
+"irregularButton.text" = "Нерегулярные событие";
+
+"createButton.text" = "Создать";
+"save.text" = "Сохранить";
+"newTrackerName.placeholder" = "Введите название трекера";
+"newHabit.title" = "Новая привычка";
+"newIrregular.title" = "Новое нерегулярное событие";
+"editTracker.title" = "Редактирование привычки";
+"everyDay.text" = "Каждый день";
+"color.title" = "Цвет";
+
+"alert.description" = "еще рано!";
+"alert.okay" = "окей";
+
+"statistics.title" = "Статистика";
+"emptyStatistics.text" = "Анализировать пока нечего";
+"getStatisticsCalculation.text" = "Трекеров завершено";
+
+"filters.title" = "Фильтры";
+
+"emptySearch.text" = "Ничего не найдено";

@@ -16,8 +16,8 @@ final class ScheduleViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Расписание"
-        view.backgroundColor = .white
+        title = NSLocalizedString("schedule.title", comment: "")
+        view.backgroundColor = .white_color
         
         weekdaysTable.dataSource = self
         weekdaysTable.delegate = self
@@ -51,6 +51,7 @@ final class ScheduleViewController: UIViewController {
         weekdaysTable.layer.cornerRadius = 15
         
         NSLayoutConstraint.activate([
+            weekdaysTable.heightAnchor.constraint(equalToConstant: 525),
             weekdaysTable.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             weekdaysTable.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             weekdaysTable.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
@@ -60,10 +61,10 @@ final class ScheduleViewController: UIViewController {
     private func configureReadyButton() {
         view.addSubview(readyButton)
         readyButton.translatesAutoresizingMaskIntoConstraints = false
-        readyButton.backgroundColor = .black
-        readyButton.setTitleColor(.white, for: .normal)
+        readyButton.backgroundColor = .black_color
+        readyButton.setTitleColor(.white_color, for: .normal)
         readyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        readyButton.setTitle("Готово", for: .normal)
+        readyButton.setTitle(NSLocalizedString("doneButton.text", comment: ""), for: .normal)
         readyButton.layer.cornerRadius = 16
         readyButton.addTarget(self, action: #selector(didTapRdyButton), for: .touchUpInside)
         
@@ -162,3 +163,4 @@ extension ScheduleViewController: ScheduleCellDelegate {
         }
     }
 }
+

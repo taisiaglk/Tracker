@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 enum WeekDay: Int, Codable, CaseIterable {
     case monday = 0
     case tuesday = 1
@@ -20,38 +19,38 @@ enum WeekDay: Int, Codable, CaseIterable {
     var day: String {
         switch self {
         case .monday:
-            return "Понедельник"
+            return NSLocalizedString("Monday", comment: "")
         case .tuesday:
-            return "Вторник"
+            return NSLocalizedString("Tuesday", comment: "")
         case .wednesday:
-            return "Среда"
+            return NSLocalizedString("Wednesday", comment: "")
         case .thursday:
-            return "Четверг"
+            return NSLocalizedString("Thursday", comment: "")
         case .friday:
-            return "Пятница"
+            return NSLocalizedString("Friday", comment: "")
         case .saturday:
-            return "Суббота"
+            return NSLocalizedString("Saturday", comment: "")
         case .sunday:
-            return "Воскресенье"
+            return NSLocalizedString("Sunday", comment: "")
         }
     }
     
     var shortDay: String {
         switch self {
         case .monday:
-            return "Пн"
+            return NSLocalizedString("Mon", comment: "")
         case .tuesday:
-            return "Вт"
+            return NSLocalizedString("Tue", comment: "")
         case .wednesday:
-            return "Ср"
+            return NSLocalizedString("Wed", comment: "")
         case .thursday:
-            return "Чт"
+            return NSLocalizedString("Thu", comment: "")
         case .friday:
-            return "Пт"
-        case .saturday:
-            return "Сб"
+            return NSLocalizedString("Fri", comment: "")
+        case .saturday: 
+            return NSLocalizedString("Sat", comment: "")
         case .sunday:
-            return "Вс"
+            return NSLocalizedString("Sun", comment: "")
         }
     }
     

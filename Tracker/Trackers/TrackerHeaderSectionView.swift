@@ -12,6 +12,8 @@ class TrackerHeaderSectionView: UICollectionReusableView {
     
     let titleLabel = UILabel()
     
+    static let identifier = "headerCellIdentifier"
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureTitileLabel()

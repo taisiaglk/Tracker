@@ -1,0 +1,76 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Тася Галкина on 14.06.2024.
+  
+*/
+
+"onboardingBlueLabel.title" = "Track only what you want";
+"onboardingRedLabel.title" = "Even if it's not litres of water and yoga";
+"onboardingDoneButton.text" = "These are the technologies!";
+
+
+"tabBarTrackers.title" = "Trackers";
+"tabBarStatistics.title" = "Statistics";
+
+"trackers.title" = "Trackers";
+"searchTextField.placeholder" = "Search";
+"emptyState.text" = "What are we going to track?";
+"unpinTracker.text" = "Unpin";
+"pinTracker.text" = "Pin";
+"cancelButton.text" = "Cancel";
+"pinnedTrackers.title" = "Pinned";
+"edit.text" = "Edit";
+"delete.text" = "Delete";
+"filterButton.text" = "Filters";
+"showDeleteAlert.text" = "Are you sure you want delete tracker?";
+
+"addCategoryButton.text" = "Add a category";
+"emptyStateCategory.text" = "Habits and events\n can be combined in meaning";
+"category.title" = "Category";
+
+"newCategoryTextField.placeholder" = "Enter the name of the category";
+"doneButton.text" = "Done";
+"newCategory.title" = "New category";
+
+"schedule.title" = "Schedule";
+
+"Monday" = "Monday";
+"Tuesday" = "Tuesday";
+"Wednesday" = "Wednesday";
+"Thursday" = "Thursday";
+"Friday" = "Friday";
+"Saturday" = "Saturday";
+"Sunday" = "Sunday";
+
+"Mon" = "Mon";
+"Tue" = "Tue";
+"Wed" = "Wed";
+"Thu" = "Thu";
+"Fri" = "Fri";
+"Sat" = "Sat";
+"Sun" = "Sun";
+
+"addTracker.title" = "Creating a tracker";
+"habitButton.text" = "Habit";
+"irregularButton.text" = "Irregular events";
+
+"createButton.text" = "Create";
+"save.text" = "Save";
+"newTrackerName.placeholder" = "Enter the name of the tracker";
+"newHabit.title" = "New habit";
+"newIrregular.title" = "New irregular event";
+"editTracker.title" = "Habit editing";
+"everyDay.text" = "Every day";
+"color.title" = "Color";
+
+"alert.description" = "It's still early!";
+"alert.okay" = "okay";
+
+"statistics.title" = "Statistics";
+"emptyStatistics.text" = "There is nothing to analyze yet";
+"getStatisticsCalculation.text" = "Trackers completed";
+
+"filters.title" = "Filters";
+"emptySearch.text" = "Nothing was found";
