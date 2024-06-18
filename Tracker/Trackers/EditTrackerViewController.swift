@@ -13,10 +13,6 @@ protocol EditTrackerViewControllerDelegate: AnyObject {
     func updateTracker(tracker: Tracker, to category: TrackerCategory)
 }
 
-//enum TrackerVersion {
-//    case habit, event
-//}
-
 final class EditTrackerViewController: UIViewController {
     
     private let trackerStore = TrackerStore.shared
@@ -54,6 +50,7 @@ final class EditTrackerViewController: UIViewController {
         nameTracker.delegate = self
         optionsTable.dataSource = self
         optionsTable.delegate = self
+        optionsTable.reloadData()
         emojiAndColorCollectionView.dataSource = self
         emojiAndColorCollectionView.delegate = self
         
@@ -76,7 +73,7 @@ final class EditTrackerViewController: UIViewController {
     private var messageHeightConstraint: NSLayoutConstraint?
     private var optionsTopConstraint: NSLayoutConstraint?
     
-    private let parametres = [NSLocalizedString("category.title", comment: ""), NSLocalizedString("schedule.title", comment: ""),]
+    private let parametres = [NSLocalizedString("category.title", comment: ""), NSLocalizedString("schedule.title", comment: "")]
     
     var emoji = [
         "🙂", "😻", "🌺", "🐶", "❤️", "😱",
@@ -135,7 +132,6 @@ final class EditTrackerViewController: UIViewController {
             selectedColorIndex = colorIndex
         }
         
-        optionsTable.reloadData()
         emojiAndColorCollectionView.reloadData()
     }
     
@@ -216,9 +212,9 @@ final class EditTrackerViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             optionsTable.topAnchor.constraint(equalTo: nameTracker.bottomAnchor, constant: 16),
-            optionsTable.heightAnchor.constraint(equalToConstant: title == NSLocalizedString("newHabit.title", comment: "") ? 150 : 75),
             optionsTable.leadingAnchor.constraint(equalTo: nameTracker.leadingAnchor),
-            optionsTable.trailingAnchor.constraint(equalTo: nameTracker.trailingAnchor)
+            optionsTable.trailingAnchor.constraint(equalTo: nameTracker.trailingAnchor),
+            optionsTable.heightAnchor.constraint(equalToConstant: 150)
         ])
     }
     
@@ -260,7 +256,7 @@ final class EditTrackerViewController: UIViewController {
             buttonStack.topAnchor.constraint(equalTo: emojiAndColorCollectionView.bottomAnchor, constant: 16),
             buttonStack.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             buttonStack.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            buttonStack.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor),
+            buttonStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -24),
             buttonStack.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
@@ -302,7 +298,7 @@ final class EditTrackerViewController: UIViewController {
     }
     
     private var scheduleString: String? {
-        guard let schedule = schedule else { return nil }
+        guard let schedule = data.schedule else { return nil }
         if schedule.count == 7 { return NSLocalizedString("everyDay.text", comment: "") }
         let short: [String] = schedule.map { $0.shortDay }
         return short.joined(separator: ", ")
@@ -376,28 +372,33 @@ final class EditTrackerViewController: UIViewController {
 extension EditTrackerViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isHabit {
-            return 2
-        } else {
-            return 1
-        }
+        let rows = isHabit ? 2 : 1
+        return rows
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CreatingCell.identifier) as? CreatingCell else { return UITableViewCell() }
-        
+
         var description: String? = nil
         var position: CommonCellView.Position
         
         if !isHabit {
-            description = descr.title
+            description = category
             position = .common
         } else {
-            description = indexPath.row == 0 ? descr.title : scheduleString
-            position = indexPath.row == 0 ? .top : .bottom
+            if indexPath.row == 0 {
+                description = descr.title
+                position = .top
+            } else {
+                description = scheduleString
+                position = .bottom
+            }
         }
         cell.configure(name: parametres[indexPath.row], description: description, position: position)
         return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 75
     }
 }
 
@@ -406,8 +407,8 @@ extension EditTrackerViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isHabit {
             if indexPath.row != 0 {
-                guard let schedule = data.schedule else { return }
-                let scheduleViewController = ScheduleViewController(markedWeekdays: schedule)
+                let schedule = data.schedule
+                let scheduleViewController = ScheduleViewController(markedWeekdays: schedule ?? [])
                 scheduleViewController.delegate = self
                 let navigationController = UINavigationController(rootViewController: scheduleViewController)
                 present(navigationController, animated: true)
@@ -421,10 +422,6 @@ extension EditTrackerViewController: UITableViewDelegate {
             categoryViewController.delegate = self
             navigationController?.pushViewController(categoryViewController, animated: true)
         }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
     }
 }
 
@@ -440,8 +437,6 @@ extension EditTrackerViewController: CategoryViewControllerDelegate {
     func didSelectCategory(category: TrackerCategory) {
         descr.title = category.title
         self.selectedTrackerCategory = category
-//        self.selectedTrackerCategory?.title = TrackerCategory.TrackCategory().title ?? ""
-//        self.selectedTrackerCategory?.trackers = TrackerCategory.TrackCategory().trackers
         optionsTable.reloadData()
     }
 }

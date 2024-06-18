@@ -51,6 +51,7 @@ final class ScheduleViewController: UIViewController {
         weekdaysTable.layer.cornerRadius = 15
         
         NSLayoutConstraint.activate([
+            weekdaysTable.heightAnchor.constraint(equalToConstant: 525),
             weekdaysTable.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             weekdaysTable.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             weekdaysTable.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)

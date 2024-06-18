@@ -279,9 +279,6 @@ class TrackersViewController: UIViewController, TrackerTypeViewControllerDelegat
         
         completedTrackers = records.flatMap { $0 }
         reloadPinTrackers()
-//        filteredCategories = categories.filter { category in
-//            !category.trackers.isEmpty
-//        }
         reloadFilteredCategories(text: searchField.text, date: currentDate)
     }
     
@@ -562,32 +559,16 @@ extension TrackersViewController {
         }
     }
     
-//    func findCategoryByTracker(tracker: Tracker) throws -> TrackerCategory? {
-//        try trackerCategoryStore.getCategories()
-//            .first(where: {category in
-//                category.trackers.contains(where: { $0.id == tracker.id})
-//            })
-//    }
-    
     private func editingTrackers(tracker: Tracker) {
         let daysCount = completedTrackers.filter { $0.idRecord == tracker.id }.count
         if let categoryName = try? findCategoryByTracker(tracker: tracker) {
             let editTrackerViewController = EditTrackerViewController(tracker: tracker, daysCount: daysCount, category: categoryName)
-    //        editTrackerViewController.typeOfTracker = .edit
             editTrackerViewController.daysCount = daysCount
             editTrackerViewController.editTracker = tracker
             editTrackerViewController.delegate = self
             let navigationController = UINavigationController(rootViewController: editTrackerViewController)
             present(navigationController, animated: true)
         }
-//        let categoryName = findCategoryByTracker(tracker: tracker)
-//        let editTrackerViewController = EditTrackerViewController(tracker: tracker, daysCount: daysCount, category: categoryName)
-////        editTrackerViewController.typeOfTracker = .edit
-//        editTrackerViewController.daysCount = daysCount
-//        editTrackerViewController.editTracker = tracker
-//        editTrackerViewController.delegate = self
-        
-        
     }
 }
 

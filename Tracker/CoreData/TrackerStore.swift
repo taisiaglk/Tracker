@@ -140,11 +140,9 @@ final class TrackerStore: NSObject {
         let fetchRequest = NSFetchRequest<TrackerCoreData>(entityName: "TrackerCoreData")
         fetchRequest.predicate = NSPredicate(format: "idTracker == %@", tracker.id as CVarArg)
         do {
-//            let existingTrackers = try context.fetch(fetchRequest)
             print(tracker)
             print("111")
             let existingTrackers = try context.fetch(fetchRequest)
-//            print(existingTrackers.id)
             if let existingTracker = existingTrackers.first {
                 existingTracker.idTracker = tracker.id
                 existingTracker.name = tracker.name

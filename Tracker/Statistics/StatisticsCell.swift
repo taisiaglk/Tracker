@@ -88,25 +88,5 @@ final class StatisticsCell: UICollectionViewCell {
         gradientLayer.mask = shapeLayer
         contentView.layer.addSublayer(gradientLayer)
     }
-    
-//    private func addViews() {
-//        [countLabel,
-//         titleLabel].forEach {
-//            contentView.addSubview($0)
-//            $0.translatesAutoresizingMaskIntoConstraints = false
-//        }
-//    }
-    
-//    private func setupConstraints() {
-//        NSLayoutConstraint.activate([
-//            countLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-//            countLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
-//            countLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
-//            titleLabel.topAnchor.constraint(equalTo: countLabel.bottomAnchor, constant: 7),
-//            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
-//            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
-//            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
-//        ])
-//    }
 }
 
