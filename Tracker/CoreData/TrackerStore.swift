@@ -141,17 +141,20 @@ final class TrackerStore: NSObject {
         fetchRequest.predicate = NSPredicate(format: "idTracker == %@", tracker.id as CVarArg)
         do {
 //            let existingTrackers = try context.fetch(fetchRequest)
-            
+            print(tracker)
+            print("111")
             let existingTrackers = try context.fetch(fetchRequest)
-            if existingTrackers.isEmpty {
-                let trackerCoreData = TrackerCoreData(context: context)
-                trackerCoreData.idTracker = tracker.id
-                trackerCoreData.name = tracker.name
-                trackerCoreData.color = tracker.color.hexString()
-                trackerCoreData.emoji = tracker.emoji
-                trackerCoreData.schedule = WeekDay.calculateScheduleValue(for: tracker.schedule ?? [])
-//                trackerCoreData.category = trackerCategoryCoreData
-                trackerCoreData.isPinned = tracker.isPinned
+//            print(existingTrackers.id)
+            if let existingTracker = existingTrackers.first {
+                existingTracker.idTracker = tracker.id
+                existingTracker.name = tracker.name
+                existingTracker.color = tracker.color.hexString()
+                existingTracker.emoji = tracker.emoji
+                existingTracker.schedule = WeekDay.calculateScheduleValue(for: tracker.schedule ?? [])
+                let trackerCategoryCoreData = try trackerCategoryStore.fetchCategoryCoreData(for: category)
+                existingTracker.category = trackerCategoryCoreData
+                existingTracker.isPinned = tracker.isPinned
+                print(existingTracker)
                 try saveContext()
             }
         }

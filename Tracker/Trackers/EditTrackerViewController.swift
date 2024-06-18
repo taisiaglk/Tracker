@@ -46,6 +46,8 @@ final class EditTrackerViewController: UIViewController {
     var daysCount: Int?
     var category: String?
     var schedule: [WeekDay]?
+    var selectedTrackerCategory: TrackerCategory?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white_color
@@ -88,7 +90,7 @@ final class EditTrackerViewController: UIViewController {
         .colorr13, .colorr14, .colorr15, .colorr16, .colorr17, .colorr18
     ]
     
-    init(tracker: Tracker, daysCount: Int, category: String, data: Tracker.Track = Tracker.Track(), descr: TrackerCategory.TrackCategory = TrackerCategory.TrackCategory()) {
+    init(tracker: Tracker, daysCount: Int, category: TrackerCategory, data: Tracker.Track = Tracker.Track(), descr: TrackerCategory.TrackCategory = TrackerCategory.TrackCategory()) {
         self.descr = descr
         self.data = data
         self.editTracker = tracker
@@ -98,11 +100,12 @@ final class EditTrackerViewController: UIViewController {
         self.data.emoji = tracker.emoji
         self.data.isPinned = tracker.isPinned
         
-        self.descr.title = category
-        
+        self.descr.title = category.title
+        self.descr.trackers = category.trackers
+        self.selectedTrackerCategory = category
         super.init(nibName: nil, bundle: nil)
         self.daysCount = daysCount
-        self.category = category
+        self.selectedTrackerCategory = category
         self.editTracker = tracker
         
     }
@@ -332,14 +335,12 @@ final class EditTrackerViewController: UIViewController {
     }
     
     @objc private func didTapCreateButton() {
-        
-        guard let category = descr.title,
-              let emoji = data.emoji,
-              let color = data.color else { return }
-        let createNewTracker = Tracker(id: editTracker!.id, name: data.name, color: color, emoji: emoji, schedule: data.schedule, isPinned: false)
-        if let category = try? findCategoryByTracker(tracker: createNewTracker) {
-            delegate?.updateTracker(tracker: createNewTracker, to: category)
+        let createNewTracker = Tracker(id: editTracker!.id, name: data.name, color: selectedColor ?? .colorr1, emoji: selectedEmoji ?? "🙂", schedule: data.schedule, isPinned: editTracker?.isPinned ?? false)
+        guard let selectedTrackerCategory = selectedTrackerCategory else {
+            return
         }
+        delegate?.updateTracker(tracker: createNewTracker, to: selectedTrackerCategory)
+        
         
     }
     
@@ -389,10 +390,10 @@ extension EditTrackerViewController: UITableViewDataSource {
         var position: CommonCellView.Position
         
         if !isHabit {
-            description = category
+            description = descr.title
             position = .common
         } else {
-            description = indexPath.row == 0 ? category : scheduleString
+            description = indexPath.row == 0 ? descr.title : scheduleString
             position = indexPath.row == 0 ? .top : .bottom
         }
         cell.configure(name: parametres[indexPath.row], description: description, position: position)
@@ -438,6 +439,9 @@ extension EditTrackerViewController: ScheduleViewControllerDelegate {
 extension EditTrackerViewController: CategoryViewControllerDelegate {
     func didSelectCategory(category: TrackerCategory) {
         descr.title = category.title
+        self.selectedTrackerCategory = category
+//        self.selectedTrackerCategory?.title = TrackerCategory.TrackCategory().title ?? ""
+//        self.selectedTrackerCategory?.trackers = TrackerCategory.TrackCategory().trackers
         optionsTable.reloadData()
     }
 }

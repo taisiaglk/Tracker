@@ -572,7 +572,7 @@ extension TrackersViewController {
     private func editingTrackers(tracker: Tracker) {
         let daysCount = completedTrackers.filter { $0.idRecord == tracker.id }.count
         if let categoryName = try? findCategoryByTracker(tracker: tracker) {
-            let editTrackerViewController = EditTrackerViewController(tracker: tracker, daysCount: daysCount, category: categoryName.title)
+            let editTrackerViewController = EditTrackerViewController(tracker: tracker, daysCount: daysCount, category: categoryName)
     //        editTrackerViewController.typeOfTracker = .edit
             editTrackerViewController.daysCount = daysCount
             editTrackerViewController.editTracker = tracker
@@ -743,9 +743,11 @@ struct GeometricParams {
 extension TrackersViewController: EditTrackerViewControllerDelegate {
     func updateTracker(tracker: Tracker, to category: TrackerCategory) {
         print("Updated")
-        
+//        present(navigationController, animated: true)
+        dismiss(animated: true)
         try? trackerStore.updateTracker(tracker, to: category)
         try? fetchCategories()
+        reloadData()
         reloadFilteredCategories(text: searchField.text, date: currentDate)
     }
 }
