@@ -71,3 +71,6 @@
 "statistics.title" = "Statistics";
 "emptyStatistics.text" = "There is nothing to analyze yet";
 "getStatisticsCalculation.text" = "Trackers completed";
+
+"filters.title" = "Filters";
+"emptySearch.text" = "Nothing was found";

@@ -71,3 +71,7 @@
 "statistics.title" = "Статистика";
 "emptyStatistics.text" = "Анализировать пока нечего";
 "getStatisticsCalculation.text" = "Трекеров завершено";
+
+"filters.title" = "Фильтры";
+
+"emptySearch.text" = "Ничего не найдено";
